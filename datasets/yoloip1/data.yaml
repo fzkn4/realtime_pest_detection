@@ -1,0 +1,66 @@
+train: datasets/yoloip1/train/images
+val: datasets/yoloip1/valid/images
+test: datasets/yoloip1/test/images
+
+nc: 51
+names:
+  [
+    "Beet spot flies",
+    "Lawana imitata Melichar",
+    "Locustoidea",
+    "Potosiabre vitarsis",
+    "Rice Stemfly",
+    "alfalfa plant bug",
+    "alfalfa weevil",
+    "aphids",
+    "army worm",
+    "asiatic rice borer",
+    "beet army worm",
+    "beet fly",
+    "beet weevil",
+    "bird cherry-oataphid",
+    "black cutworm",
+    "brown plant hopper",
+    "cabbage army worm",
+    "cerodonta denticornis",
+    "corn borer",
+    "english grain aphid",
+    "flax budworm",
+    "flea beetle",
+    "grain spreader thrips",
+    "green bug",
+    "grub",
+    "large cutworm",
+    "longlegged spider mite",
+    "lytta polita",
+    "meadow moth",
+    "mole cricket",
+    "paddy stem maggot",
+    "peach borer",
+    "penthaleus major",
+    "red spider",
+    "rice gall midge",
+    "rice leaf caterpillar",
+    "rice leaf roller",
+    "rice leafhopper",
+    "rice shell pest",
+    "rice water weevil",
+    "sericaorient alismots chulsky",
+    "small brown plant hopper",
+    "tarnished plant bug",
+    "undefined",
+    "wheat phloeothrips",
+    "wheat sawfly",
+    "white backed plant hopper",
+    "white margined moth",
+    "wireworm",
+    "yellow cutworm",
+    "yellow rice borer",
+  ]
+
+roboflow:
+  workspace: ip102110000
+  project: yoloip1
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/ip102110000/yoloip1/dataset/1

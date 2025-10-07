@@ -1,12 +1,13 @@
-# Real-time Object Detection with YOLOv8
+# Real-time Pest Detection with YOLOv8
 
-A real-time object detection system using YOLOv8 that streams video with detections to a localhost webapp. This project implements the latest YOLOv8 model for high-performance object detection with a beautiful, responsive web interface.
+A real-time pest detection system using YOLOv8 that streams video with pest detections to a localhost webapp. This project implements the YOLOIP1 pest detection model for high-performance pest identification with a beautiful, responsive web interface.
 
 ## 🚀 Features
 
-- **Real-time Object Detection**: Uses YOLOv8 for fast and accurate object detection
+- **Real-time Pest Detection**: Uses YOLOIP1 model for fast and accurate pest identification
+- **High Performance**: 63.6% mAP, 59.3% precision, 63.0% recall
 - **Web Interface**: Beautiful, responsive webapp with modern UI design
-- **Live Video Streaming**: Streams camera feed with real-time detections
+- **Live Video Streaming**: Streams camera feed with real-time pest detections
 - **Easy Controls**: Simple start/stop detection controls
 - **Cross-platform**: Works on Windows, macOS, and Linux
 - **Mobile Responsive**: Optimized for both desktop and mobile devices
@@ -32,13 +33,26 @@ A real-time object detection system using YOLOv8 that streams video with detecti
    pip install -r requirements.txt
    ```
 
-3. **Run the application**
+3. **Setup the pest detection dataset**
+
+   ```bash
+   python setup_pest_detection.py
+   ```
+
+4. **Download the YOLOIP1 dataset**
+
+   - Go to: https://universe.roboflow.com/ip102110000/yoloip1/dataset/1/download/yolov8
+   - Sign up/Login to Roboflow (free account)
+   - Download the dataset in YOLOv8 format
+   - Follow the instructions provided by the setup script
+
+5. **Run the application**
 
    ```bash
    python object_detection.py
    ```
 
-4. **Open your browser**
+6. **Open your browser**
    Navigate to: `http://localhost:5000`
 
 ## 🎯 Usage
@@ -48,35 +62,36 @@ A real-time object detection system using YOLOv8 that streams video with detecti
    - Run `python object_detection.py`
    - Open your browser to `http://localhost:5000`
 
-2. **Begin Detection**
+2. **Begin Pest Detection**
 
-   - Click "Start Detection" to begin real-time object detection
-   - The webcam will start and show detected objects with bounding boxes
-   - Objects are labeled with confidence scores
+   - Click "Start Detection" to begin real-time pest detection
+   - The webcam will start and show detected pests with bounding boxes
+   - Pests are labeled with confidence scores and species names
 
 3. **Stop Detection**
-   - Click "Stop Detection" to stop the camera and detection
+   - Click "Stop Detection" to stop the camera and pest detection
 
 ## 🔧 Configuration
 
 ### Model Selection
 
-The application uses YOLOv8n (nano) by default for optimal performance. You can modify the model in `object_detection.py`:
+The application uses the YOLOIP1 pest detection model by default. You can modify the model in `object_detection.py`:
 
 ```python
-# Change model size for different performance/accuracy trade-offs
-detector = RealTimeObjectDetection(model_path='yolov8s.pt')  # Small
-detector = RealTimeObjectDetection(model_path='yolov8m.pt')  # Medium
-detector = RealTimeObjectDetection(model_path='yolov8l.pt')  # Large
-detector = RealTimeObjectDetection(model_path='yolov8x.pt')  # Extra Large
+# Use the trained pest detection model
+detector = RealTimeObjectDetection(model_path='datasets/yoloip1/best.pt')
+
+# Or use the last checkpoint
+detector = RealTimeObjectDetection(model_path='datasets/yoloip1/last.pt')
 ```
 
 ### Confidence Threshold
 
-Adjust the confidence threshold for detections:
+Adjust the confidence threshold for pest detections (default is 0.4 for optimal performance):
 
 ```python
-detector = RealTimeObjectDetection(confidence_threshold=0.7)  # Higher confidence
+detector = RealTimeObjectDetection(confidence_threshold=0.6)  # Higher confidence
+detector = RealTimeObjectDetection(confidence_threshold=0.3)  # Lower confidence (more detections)
 ```
 
 ### Camera Settings
@@ -93,11 +108,19 @@ self.cap.set(cv2.CAP_PROP_FPS, 60)            # Higher frame rate
 
 ```
 pest-detection/
-├── object_detection.py    # Main application file
-├── requirements.txt       # Python dependencies
+├── object_detection.py           # Main application file
+├── setup_pest_detection.py       # Dataset setup script
+├── requirements.txt              # Python dependencies
+├── datasets/
+│   └── yoloip1/                  # YOLOIP1 pest detection dataset
+│       ├── best.pt              # Trained model
+│       ├── data.yaml            # Dataset configuration
+│       ├── train/               # Training images
+│       ├── valid/               # Validation images
+│       └── test/                # Test images
 ├── templates/
-│   └── index.html        # Web interface
-└── README.md             # This file
+│   └── index.html               # Web interface
+└── README.md                    # This file
 ```
 
 ## 🎨 Web Interface Features

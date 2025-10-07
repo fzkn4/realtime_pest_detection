@@ -9,12 +9,12 @@ from io import BytesIO
 from PIL import Image
 
 class RealTimeObjectDetection:
-    def __init__(self, model_path='yolov8n.pt', confidence_threshold=0.5):
+    def __init__(self, model_path='datasets/yoloip1/best.pt', confidence_threshold=0.4):
         """
-        Initialize the real-time object detection system
+        Initialize the real-time pest detection system
         
         Args:
-            model_path (str): Path to YOLOv8 model file
+            model_path (str): Path to YOLOv8 pest detection model file
             confidence_threshold (float): Minimum confidence for detections
         """
         self.model = YOLO(model_path)
@@ -38,18 +38,18 @@ class RealTimeObjectDetection:
         
     def detect_objects(self, frame):
         """
-        Detect objects in a frame using YOLOv8
+        Detect pests in a frame using YOLOv8 pest detection model
         
         Args:
             frame: Input frame (numpy array)
             
         Returns:
-            Annotated frame with bounding boxes and labels
+            Annotated frame with bounding boxes and pest labels
         """
-        # Run YOLOv8 inference with optimized settings
+        # Run YOLOv8 pest detection inference with optimized settings
         results = self.model(frame, conf=self.confidence_threshold, verbose=False)
         
-        # Draw bounding boxes and labels
+        # Draw bounding boxes and pest labels
         annotated_frame = results[0].plot()
         
         return annotated_frame
@@ -144,25 +144,25 @@ def create_app():
     
     @app.route('/start_detection')
     def start_detection():
-        """Start object detection"""
+        """Start pest detection"""
         global detector
         try:
             detector = RealTimeObjectDetection()
             detector.start_camera()
             detector.start_detection()
-            return {'status': 'success', 'message': 'Object detection started'}
+            return {'status': 'success', 'message': 'Pest detection started'}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
     
     @app.route('/stop_detection')
     def stop_detection():
-        """Stop object detection"""
+        """Stop pest detection"""
         global detector
         if detector is not None:
             detector.stop_detection()
             detector.cleanup()
             detector = None
-        return {'status': 'success', 'message': 'Object detection stopped'}
+        return {'status': 'success', 'message': 'Pest detection stopped'}
     
     return app
 
