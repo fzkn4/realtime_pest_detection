@@ -1,0 +1,402 @@
+{
+  "person": {
+    "name": "Person",
+    "description": "Human detected in the monitoring area. This could be a farmer, worker, or visitor in the agricultural field.",
+    "category": "Human"
+  },
+  "bicycle": {
+    "name": "Bicycle",
+    "description": "A two-wheeled vehicle commonly used for transportation in agricultural areas.",
+    "category": "Vehicle"
+  },
+  "car": {
+    "name": "Car",
+    "description": "Motor vehicle detected. Could be used for transportation or agricultural operations.",
+    "category": "Vehicle"
+  },
+  "motorcycle": {
+    "name": "Motorcycle",
+    "description": "Two-wheeled motor vehicle commonly used for quick transportation in rural areas.",
+    "category": "Vehicle"
+  },
+  "airplane": {
+    "name": "Airplane",
+    "description": "Aircraft detected overhead. Could be crop dusting operations or regular air traffic.",
+    "category": "Aircraft"
+  },
+  "bus": {
+    "name": "Bus",
+    "description": "Large motor vehicle for transporting groups of people.",
+    "category": "Vehicle"
+  },
+  "train": {
+    "name": "Train",
+    "description": "Rail vehicle detected, possibly near agricultural transportation routes.",
+    "category": "Vehicle"
+  },
+  "truck": {
+    "name": "Truck",
+    "description": "Large vehicle often used for transporting agricultural products and equipment.",
+    "category": "Vehicle"
+  },
+  "boat": {
+    "name": "Boat",
+    "description": "Watercraft detected, possibly in irrigation canals or nearby water bodies.",
+    "category": "Watercraft"
+  },
+  "traffic light": {
+    "name": "Traffic Light",
+    "description": "Signal control device for managing vehicle and pedestrian traffic.",
+    "category": "Infrastructure"
+  },
+  "fire hydrant": {
+    "name": "Fire Hydrant",
+    "description": "Emergency water access point for fire safety.",
+    "category": "Infrastructure"
+  },
+  "stop sign": {
+    "name": "Stop Sign",
+    "description": "Traffic control sign requiring vehicles to stop.",
+    "category": "Infrastructure"
+  },
+  "parking meter": {
+    "name": "Parking Meter",
+    "description": "Device for collecting parking fees.",
+    "category": "Infrastructure"
+  },
+  "bench": {
+    "name": "Bench",
+    "description": "Seating furniture, commonly found in public or rest areas.",
+    "category": "Furniture"
+  },
+  "bird": {
+    "name": "Bird",
+    "description": "Avian species detected. Birds can be both beneficial pollinators and potential crop pests depending on the species.",
+    "category": "Wildlife"
+  },
+  "cat": {
+    "name": "Cat",
+    "description": "Feline detected. Cats can help control rodent populations in agricultural areas.",
+    "category": "Animal"
+  },
+  "dog": {
+    "name": "Dog",
+    "description": "Canine detected. Dogs are often used for guarding agricultural properties and livestock.",
+    "category": "Animal"
+  },
+  "horse": {
+    "name": "Horse",
+    "description": "Equine animal, commonly used for farm work and transportation in agricultural settings.",
+    "category": "Livestock"
+  },
+  "sheep": {
+    "name": "Sheep",
+    "description": "Livestock animal raised for wool, meat, and milk production.",
+    "category": "Livestock"
+  },
+  "cow": {
+    "name": "Cow",
+    "description": "Cattle livestock, essential for dairy and meat production in agriculture.",
+    "category": "Livestock"
+  },
+  "elephant": {
+    "name": "Elephant",
+    "description": "Large mammal that can cause significant crop damage when entering agricultural areas.",
+    "category": "Wildlife"
+  },
+  "bear": {
+    "name": "Bear",
+    "description": "Large wildlife predator that may pose risks to livestock and crops.",
+    "category": "Wildlife"
+  },
+  "zebra": {
+    "name": "Zebra",
+    "description": "Wild equine species with distinctive striped pattern.",
+    "category": "Wildlife"
+  },
+  "giraffe": {
+    "name": "Giraffe",
+    "description": "Tall African mammal with distinctive long neck.",
+    "category": "Wildlife"
+  },
+  "backpack": {
+    "name": "Backpack",
+    "description": "Bag carried on the back, often used by workers or visitors.",
+    "category": "Equipment"
+  },
+  "umbrella": {
+    "name": "Umbrella",
+    "description": "Portable canopy device for protection from rain or sun.",
+    "category": "Equipment"
+  },
+  "handbag": {
+    "name": "Handbag",
+    "description": "Portable bag typically carried by hand or over the shoulder.",
+    "category": "Equipment"
+  },
+  "tie": {
+    "name": "Tie",
+    "description": "Neckwear accessory worn for formal occasions.",
+    "category": "Clothing"
+  },
+  "suitcase": {
+    "name": "Suitcase",
+    "description": "Portable luggage for carrying belongings during travel.",
+    "category": "Equipment"
+  },
+  "frisbee": {
+    "name": "Frisbee",
+    "description": "Flying disc toy used for recreational activities.",
+    "category": "Recreation"
+  },
+  "skis": {
+    "name": "Skis",
+    "description": "Equipment for snow skiing and winter sports.",
+    "category": "Sports Equipment"
+  },
+  "snowboard": {
+    "name": "Snowboard",
+    "description": "Board used for descending snow-covered slopes.",
+    "category": "Sports Equipment"
+  },
+  "sports ball": {
+    "name": "Sports Ball",
+    "description": "Ball used in various sports and recreational activities.",
+    "category": "Sports Equipment"
+  },
+  "kite": {
+    "name": "Kite",
+    "description": "Tethered flying object, sometimes used for bird deterrence in agriculture.",
+    "category": "Recreation"
+  },
+  "baseball bat": {
+    "name": "Baseball Bat",
+    "description": "Equipment used in baseball sports.",
+    "category": "Sports Equipment"
+  },
+  "baseball glove": {
+    "name": "Baseball Glove",
+    "description": "Protective glove used for catching baseballs.",
+    "category": "Sports Equipment"
+  },
+  "skateboard": {
+    "name": "Skateboard",
+    "description": "Board with wheels used for skating and tricks.",
+    "category": "Sports Equipment"
+  },
+  "surfboard": {
+    "name": "Surfboard",
+    "description": "Board used for riding ocean waves.",
+    "category": "Sports Equipment"
+  },
+  "tennis racket": {
+    "name": "Tennis Racket",
+    "description": "Equipment used for playing tennis.",
+    "category": "Sports Equipment"
+  },
+  "bottle": {
+    "name": "Bottle",
+    "description": "Container for liquids, commonly used for water or agricultural solutions.",
+    "category": "Container"
+  },
+  "wine glass": {
+    "name": "Wine Glass",
+    "description": "Stemmed glass designed for drinking wine.",
+    "category": "Tableware"
+  },
+  "cup": {
+    "name": "Cup",
+    "description": "Small container for drinking beverages.",
+    "category": "Tableware"
+  },
+  "fork": {
+    "name": "Fork",
+    "description": "Utensil with prongs used for eating.",
+    "category": "Tableware"
+  },
+  "knife": {
+    "name": "Knife",
+    "description": "Cutting tool with a blade, used for food preparation or agricultural tasks.",
+    "category": "Tableware"
+  },
+  "spoon": {
+    "name": "Spoon",
+    "description": "Utensil with a shallow bowl for eating or serving.",
+    "category": "Tableware"
+  },
+  "bowl": {
+    "name": "Bowl",
+    "description": "Round container used for holding food or liquids.",
+    "category": "Tableware"
+  },
+  "banana": {
+    "name": "Banana",
+    "description": "Tropical fruit crop, yellow when ripe. Important agricultural product.",
+    "category": "Crop/Fruit"
+  },
+  "apple": {
+    "name": "Apple",
+    "description": "Popular fruit crop grown in orchards. Susceptible to various pests.",
+    "category": "Crop/Fruit"
+  },
+  "sandwich": {
+    "name": "Sandwich",
+    "description": "Food item consisting of ingredients between bread slices.",
+    "category": "Food"
+  },
+  "orange": {
+    "name": "Orange",
+    "description": "Citrus fruit crop requiring pest management for optimal yield.",
+    "category": "Crop/Fruit"
+  },
+  "broccoli": {
+    "name": "Broccoli",
+    "description": "Cruciferous vegetable crop that requires monitoring for pest infestations.",
+    "category": "Crop/Vegetable"
+  },
+  "carrot": {
+    "name": "Carrot",
+    "description": "Root vegetable crop grown for consumption, requires pest control.",
+    "category": "Crop/Vegetable"
+  },
+  "hot dog": {
+    "name": "Hot Dog",
+    "description": "Processed meat food item in an elongated bun.",
+    "category": "Food"
+  },
+  "pizza": {
+    "name": "Pizza",
+    "description": "Popular food dish with various toppings on a bread base.",
+    "category": "Food"
+  },
+  "donut": {
+    "name": "Donut",
+    "description": "Ring-shaped fried pastry dessert.",
+    "category": "Food"
+  },
+  "cake": {
+    "name": "Cake",
+    "description": "Sweet baked dessert food item.",
+    "category": "Food"
+  },
+  "chair": {
+    "name": "Chair",
+    "description": "Seating furniture commonly found in work or rest areas.",
+    "category": "Furniture"
+  },
+  "couch": {
+    "name": "Couch",
+    "description": "Large seating furniture for multiple people.",
+    "category": "Furniture"
+  },
+  "potted plant": {
+    "name": "Potted Plant",
+    "description": "Plant grown in a container, often for decoration or small-scale cultivation.",
+    "category": "Plant"
+  },
+  "bed": {
+    "name": "Bed",
+    "description": "Furniture designed for sleeping or resting.",
+    "category": "Furniture"
+  },
+  "dining table": {
+    "name": "Dining Table",
+    "description": "Table furniture used for eating meals.",
+    "category": "Furniture"
+  },
+  "toilet": {
+    "name": "Toilet",
+    "description": "Sanitation fixture for waste disposal.",
+    "category": "Fixture"
+  },
+  "tv": {
+    "name": "Television",
+    "description": "Electronic display device for viewing video content.",
+    "category": "Electronics"
+  },
+  "laptop": {
+    "name": "Laptop",
+    "description": "Portable computer often used for farm management and monitoring systems.",
+    "category": "Electronics"
+  },
+  "mouse": {
+    "name": "Mouse",
+    "description": "Computer input device for navigation and control.",
+    "category": "Electronics"
+  },
+  "remote": {
+    "name": "Remote Control",
+    "description": "Wireless device for controlling electronic equipment.",
+    "category": "Electronics"
+  },
+  "keyboard": {
+    "name": "Keyboard",
+    "description": "Input device with keys for typing and computer control.",
+    "category": "Electronics"
+  },
+  "cell phone": {
+    "name": "Cell Phone",
+    "description": "Mobile communication device, often used for farm management apps.",
+    "category": "Electronics"
+  },
+  "microwave": {
+    "name": "Microwave",
+    "description": "Kitchen appliance for heating food using electromagnetic radiation.",
+    "category": "Appliance"
+  },
+  "oven": {
+    "name": "Oven",
+    "description": "Kitchen appliance for baking and cooking food.",
+    "category": "Appliance"
+  },
+  "toaster": {
+    "name": "Toaster",
+    "description": "Small kitchen appliance for toasting bread.",
+    "category": "Appliance"
+  },
+  "sink": {
+    "name": "Sink",
+    "description": "Basin fixture for washing and water drainage.",
+    "category": "Fixture"
+  },
+  "refrigerator": {
+    "name": "Refrigerator",
+    "description": "Cooling appliance for food storage and preservation.",
+    "category": "Appliance"
+  },
+  "book": {
+    "name": "Book",
+    "description": "Printed or written work for reading and information.",
+    "category": "Item"
+  },
+  "clock": {
+    "name": "Clock",
+    "description": "Time-keeping device for tracking hours and minutes.",
+    "category": "Item"
+  },
+  "vase": {
+    "name": "Vase",
+    "description": "Container for holding cut flowers or decorative plants.",
+    "category": "Decor"
+  },
+  "scissors": {
+    "name": "Scissors",
+    "description": "Cutting tool with two blades, used for various tasks including plant maintenance.",
+    "category": "Tool"
+  },
+  "teddy bear": {
+    "name": "Teddy Bear",
+    "description": "Stuffed toy bear, commonly used as decoration or comfort item.",
+    "category": "Toy"
+  },
+  "hair drier": {
+    "name": "Hair Dryer",
+    "description": "Electric device for drying hair.",
+    "category": "Appliance"
+  },
+  "toothbrush": {
+    "name": "Toothbrush",
+    "description": "Oral hygiene tool for cleaning teeth.",
+    "category": "Personal Care"
+  }
+}

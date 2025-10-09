@@ -7,6 +7,8 @@ from flask import Flask, render_template, Response
 import base64
 from io import BytesIO
 from PIL import Image
+import json
+import os
 
 class RealTimeObjectDetection:
     def __init__(self, model_path='datasets/yoloip1/best.pt', confidence_threshold=0.4):
@@ -22,6 +24,7 @@ class RealTimeObjectDetection:
         self.cap = None
         self.is_running = False
         self.current_frame = None
+        self.current_detections = []
         self.lock = threading.Lock()
         
     def start_camera(self, camera_index=0):
@@ -49,6 +52,23 @@ class RealTimeObjectDetection:
         # Run YOLOv8 pest detection inference with optimized settings
         results = self.model(frame, conf=self.confidence_threshold, verbose=False)
         
+        # Extract detections
+        detections = []
+        if len(results) > 0 and results[0].boxes is not None:
+            boxes = results[0].boxes
+            for box in boxes:
+                cls_id = int(box.cls[0])
+                conf = float(box.conf[0])
+                class_name = self.model.names[cls_id]
+                detections.append({
+                    'class': class_name,
+                    'confidence': round(conf * 100, 1)
+                })
+        
+        # Update current detections
+        with self.lock:
+            self.current_detections = detections
+        
         # Draw bounding boxes and pest labels
         annotated_frame = results[0].plot()
         
@@ -60,6 +80,11 @@ class RealTimeObjectDetection:
             if self.current_frame is not None:
                 return self.current_frame.copy()
             return None
+    
+    def get_detections(self):
+        """Get the current detections"""
+        with self.lock:
+            return self.current_detections.copy()
     
     def run_detection(self):
         """Main detection loop running in a separate thread"""
@@ -116,10 +141,35 @@ def create_app():
     """Create Flask application"""
     app = Flask(__name__)
     
+    # Load object descriptions
+    descriptions_path = os.path.join(os.path.dirname(__file__), 'object_descriptions.json')
+    with open(descriptions_path, 'r') as f:
+        object_descriptions = json.load(f)
+    
     @app.route('/')
     def index():
         """Main page"""
         return render_template('index.html')
+    
+    @app.route('/get_detections')
+    def get_detections():
+        """Get current detections with descriptions"""
+        global detector
+        if detector is not None:
+            detections = detector.get_detections()
+            # Add descriptions to detections
+            for detection in detections:
+                class_name = detection['class']
+                if class_name in object_descriptions:
+                    detection['info'] = object_descriptions[class_name]
+                else:
+                    detection['info'] = {
+                        'name': class_name.title(),
+                        'description': f'{class_name.title()} detected in the monitoring area.',
+                        'category': 'Unknown'
+                    }
+            return {'status': 'success', 'detections': detections}
+        return {'status': 'success', 'detections': []}
     
     @app.route('/video_feed')
     def video_feed():
@@ -147,10 +197,13 @@ def create_app():
         """Start pest detection"""
         global detector
         try:
+            from flask import request
+            camera_index = request.args.get('camera', default=0, type=int)
+            
             detector = RealTimeObjectDetection()
-            detector.start_camera()
+            detector.start_camera(camera_index=camera_index)
             detector.start_detection()
-            return {'status': 'success', 'message': 'Pest detection started'}
+            return {'status': 'success', 'message': f'Pest detection started with camera {camera_index}'}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
     
