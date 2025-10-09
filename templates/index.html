@@ -95,7 +95,7 @@
         padding: 20px;
         border: 1px solid #e0e0e0;
         height: fit-content;
-        max-height: 700px;
+        max-height: 850px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -316,7 +316,104 @@
         color: #555;
         line-height: 1.5;
         font-size: 0.9rem;
-        margin: 0;
+        margin: 0 0 12px 0;
+      }
+
+      .control-methods {
+        margin-top: 12px;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 12px;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.4s ease, opacity 0.3s ease,
+          padding-top 0.3s ease;
+      }
+
+      .control-methods.expanded {
+        max-height: 2000px;
+        opacity: 1;
+        padding-top: 12px;
+      }
+
+      .control-methods.collapsed {
+        max-height: 0;
+        opacity: 0;
+        padding-top: 0;
+        border-top: none;
+      }
+
+      .control-section {
+        background: #f8f9fa;
+        border-radius: 6px;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-left: 3px solid #4caf50;
+      }
+
+      .control-section:last-child {
+        margin-bottom: 0;
+      }
+
+      .control-section.cultural {
+        border-left-color: #4caf50;
+      }
+
+      .control-section.biological {
+        border-left-color: #2196f3;
+      }
+
+      .control-section.chemical {
+        border-left-color: #ff9800;
+      }
+
+      .control-section.timing {
+        border-left-color: #9c27b0;
+      }
+
+      .control-title {
+        font-weight: 600;
+        color: #333;
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .control-content {
+        color: #666;
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .toggle-details-btn {
+        background: linear-gradient(135deg, #4caf50, #2e7d32);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: "TT Interphases", sans-serif;
+        margin-top: 8px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .toggle-details-btn:hover {
+        background: linear-gradient(135deg, #45a049, #1b5e20);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+      }
+
+      .toggle-details-btn:active {
+        transform: translateY(0);
       }
 
       .no-detections {
@@ -615,7 +712,7 @@
         </div>
 
         <div class="camera-selection">
-          <label for="cameraSelect">📷 Select Camera:</label>
+          <label for="cameraSelect">Select Camera:</label>
           <select id="cameraSelect" class="camera-select">
             <option value="0">Camera 0 (Built-in)</option>
             <option value="1">Camera 1 (External)</option>
@@ -648,7 +745,7 @@
           <div class="description-panel">
             <div class="panel-header">
               <h3>
-                <span> Detected Objects</span>
+                <span>Detected Pests</span>
                 <span id="detectionCount" class="detection-count">0</span>
               </h3>
               <button
@@ -674,6 +771,7 @@
       let isDetecting = false;
       let detectionInterval = null;
       let persistentDetections = {}; // Store all detected objects
+      let expandedPests = new Set(); // Track which pests have expanded details
 
       const startBtn = document.getElementById("startBtn");
       const stopBtn = document.getElementById("stopBtn");
@@ -693,6 +791,7 @@
 
       function clearDetections() {
         persistentDetections = {};
+        expandedPests.clear();
         updateDetectionsDisplay([]);
       }
 
@@ -700,7 +799,7 @@
         try {
           loading.style.display = "block";
           videoStream.style.display = "none";
-          status.textContent = "🐛 Initializing detection...";
+          status.textContent = "Initializing detection...";
           status.className = "status status-idle";
 
           const cameraIndex = cameraSelect.value;
@@ -718,11 +817,12 @@
             startBtn.disabled = true;
             stopBtn.disabled = false;
             cameraSelect.disabled = true;
-            status.textContent = "🐛 Detection active...";
+            status.textContent = "Detection active...";
             status.className = "status status-running";
 
-            // Reset persistent detections for new session
+            // Reset persistent detections and expanded states for new session
             persistentDetections = {};
+            expandedPests.clear();
 
             // Start polling for detections
             startDetectionPolling();
@@ -750,14 +850,15 @@
             startBtn.disabled = false;
             stopBtn.disabled = true;
             cameraSelect.disabled = false;
-            status.textContent = "🐛 Detection stopped";
+            status.textContent = "Detection stopped";
             status.className = "status status-idle";
 
             // Stop polling for detections
             stopDetectionPolling();
 
-            // Reset persistent detections
+            // Reset persistent detections and expanded states
             persistentDetections = {};
+            expandedPests.clear();
             detectionCount.textContent = "0";
             clearBtn.style.display = "none";
 
@@ -872,6 +973,70 @@
           // Format time
           const timeAgo = getTimeAgo(detection.firstSeen);
 
+          // Build control methods HTML if available
+          let controlMethodsHtml = "";
+          let toggleButtonHtml = "";
+
+          if (info.control_methods) {
+            const safeClassName = detection.class
+              .replace(/\s+/g, "-")
+              .replace(/[^a-zA-Z0-9-]/g, "");
+            const controlId = `control-${safeClassName}`;
+            const buttonId = `btn-${safeClassName}`;
+
+            // Check if this pest's details are currently expanded
+            const isExpanded = expandedPests.has(detection.class);
+            const expandClass = isExpanded ? "expanded" : "collapsed";
+            const buttonText = isExpanded ? "📋 See Less" : "📋 See More";
+
+            controlMethodsHtml = `<div id="${controlId}" class="control-methods ${expandClass}">`;
+
+            if (info.control_methods.cultural) {
+              controlMethodsHtml += `
+                <div class="control-section cultural">
+                  <div class="control-title">🌱 Cultural Control</div>
+                  <div class="control-content">${info.control_methods.cultural}</div>
+                </div>
+              `;
+            }
+
+            if (info.control_methods.biological) {
+              controlMethodsHtml += `
+                <div class="control-section biological">
+                  <div class="control-title">🐞 Biological Control</div>
+                  <div class="control-content">${info.control_methods.biological}</div>
+                </div>
+              `;
+            }
+
+            if (info.control_methods.chemical) {
+              controlMethodsHtml += `
+                <div class="control-section chemical">
+                  <div class="control-title">🧪 Chemical Control</div>
+                  <div class="control-content">${info.control_methods.chemical}</div>
+                </div>
+              `;
+            }
+
+            if (info.control_methods.timing) {
+              controlMethodsHtml += `
+                <div class="control-section timing">
+                  <div class="control-title">⏰ Timing & Monitoring</div>
+                  <div class="control-content">${info.control_methods.timing}</div>
+                </div>
+              `;
+            }
+
+            controlMethodsHtml += "</div>";
+
+            // Add toggle button with correct text
+            toggleButtonHtml = `
+              <button id="${buttonId}" class="toggle-details-btn" onclick="toggleControlMethods('${controlId}', '${buttonId}', '${detection.class}')">
+                <span>${buttonText}</span>
+              </button>
+            `;
+          }
+
           html += `
             <div class="${itemClass}${animationClass}">
               <div class="detection-header">
@@ -888,6 +1053,8 @@
                 <span class="time-tag">🕒 ${timeAgo}</span>
               </div>
               <p class="detection-description">${info.description}</p>
+              ${toggleButtonHtml}
+              ${controlMethodsHtml}
             </div>
           `;
         });
@@ -906,6 +1073,25 @@
 
         const hours = Math.floor(minutes / 60);
         return `${hours}h ago`;
+      }
+
+      function toggleControlMethods(controlId, buttonId, pestClass) {
+        const controlElement = document.getElementById(controlId);
+        const buttonElement = document.getElementById(buttonId);
+
+        if (controlElement.classList.contains("collapsed")) {
+          // Expand
+          controlElement.classList.remove("collapsed");
+          controlElement.classList.add("expanded");
+          buttonElement.innerHTML = "<span>📋 See Less</span>";
+          expandedPests.add(pestClass); // Remember this pest is expanded
+        } else {
+          // Collapse
+          controlElement.classList.remove("expanded");
+          controlElement.classList.add("collapsed");
+          buttonElement.innerHTML = "<span>📋 See More</span>";
+          expandedPests.delete(pestClass); // Remember this pest is collapsed
+        }
       }
 
       // Handle video stream errors

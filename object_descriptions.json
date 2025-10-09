@@ -1,402 +1,563 @@
 {
-  "person": {
-    "name": "Person",
-    "description": "Human detected in the monitoring area. This could be a farmer, worker, or visitor in the agricultural field.",
-    "category": "Human"
-  },
-  "bicycle": {
-    "name": "Bicycle",
-    "description": "A two-wheeled vehicle commonly used for transportation in agricultural areas.",
-    "category": "Vehicle"
-  },
-  "car": {
-    "name": "Car",
-    "description": "Motor vehicle detected. Could be used for transportation or agricultural operations.",
-    "category": "Vehicle"
-  },
-  "motorcycle": {
-    "name": "Motorcycle",
-    "description": "Two-wheeled motor vehicle commonly used for quick transportation in rural areas.",
-    "category": "Vehicle"
-  },
-  "airplane": {
-    "name": "Airplane",
-    "description": "Aircraft detected overhead. Could be crop dusting operations or regular air traffic.",
-    "category": "Aircraft"
-  },
-  "bus": {
-    "name": "Bus",
-    "description": "Large motor vehicle for transporting groups of people.",
-    "category": "Vehicle"
-  },
-  "train": {
-    "name": "Train",
-    "description": "Rail vehicle detected, possibly near agricultural transportation routes.",
-    "category": "Vehicle"
-  },
-  "truck": {
-    "name": "Truck",
-    "description": "Large vehicle often used for transporting agricultural products and equipment.",
-    "category": "Vehicle"
-  },
-  "boat": {
-    "name": "Boat",
-    "description": "Watercraft detected, possibly in irrigation canals or nearby water bodies.",
-    "category": "Watercraft"
-  },
-  "traffic light": {
-    "name": "Traffic Light",
-    "description": "Signal control device for managing vehicle and pedestrian traffic.",
-    "category": "Infrastructure"
-  },
-  "fire hydrant": {
-    "name": "Fire Hydrant",
-    "description": "Emergency water access point for fire safety.",
-    "category": "Infrastructure"
-  },
-  "stop sign": {
-    "name": "Stop Sign",
-    "description": "Traffic control sign requiring vehicles to stop.",
-    "category": "Infrastructure"
-  },
-  "parking meter": {
-    "name": "Parking Meter",
-    "description": "Device for collecting parking fees.",
-    "category": "Infrastructure"
-  },
-  "bench": {
-    "name": "Bench",
-    "description": "Seating furniture, commonly found in public or rest areas.",
-    "category": "Furniture"
-  },
-  "bird": {
-    "name": "Bird",
-    "description": "Avian species detected. Birds can be both beneficial pollinators and potential crop pests depending on the species.",
-    "category": "Wildlife"
-  },
-  "cat": {
-    "name": "Cat",
-    "description": "Feline detected. Cats can help control rodent populations in agricultural areas.",
-    "category": "Animal"
-  },
-  "dog": {
-    "name": "Dog",
-    "description": "Canine detected. Dogs are often used for guarding agricultural properties and livestock.",
-    "category": "Animal"
-  },
-  "horse": {
-    "name": "Horse",
-    "description": "Equine animal, commonly used for farm work and transportation in agricultural settings.",
-    "category": "Livestock"
-  },
-  "sheep": {
-    "name": "Sheep",
-    "description": "Livestock animal raised for wool, meat, and milk production.",
-    "category": "Livestock"
-  },
-  "cow": {
-    "name": "Cow",
-    "description": "Cattle livestock, essential for dairy and meat production in agriculture.",
-    "category": "Livestock"
-  },
-  "elephant": {
-    "name": "Elephant",
-    "description": "Large mammal that can cause significant crop damage when entering agricultural areas.",
-    "category": "Wildlife"
-  },
-  "bear": {
-    "name": "Bear",
-    "description": "Large wildlife predator that may pose risks to livestock and crops.",
-    "category": "Wildlife"
-  },
-  "zebra": {
-    "name": "Zebra",
-    "description": "Wild equine species with distinctive striped pattern.",
-    "category": "Wildlife"
-  },
-  "giraffe": {
-    "name": "Giraffe",
-    "description": "Tall African mammal with distinctive long neck.",
-    "category": "Wildlife"
-  },
-  "backpack": {
-    "name": "Backpack",
-    "description": "Bag carried on the back, often used by workers or visitors.",
-    "category": "Equipment"
-  },
-  "umbrella": {
-    "name": "Umbrella",
-    "description": "Portable canopy device for protection from rain or sun.",
-    "category": "Equipment"
-  },
-  "handbag": {
-    "name": "Handbag",
-    "description": "Portable bag typically carried by hand or over the shoulder.",
-    "category": "Equipment"
-  },
-  "tie": {
-    "name": "Tie",
-    "description": "Neckwear accessory worn for formal occasions.",
-    "category": "Clothing"
-  },
-  "suitcase": {
-    "name": "Suitcase",
-    "description": "Portable luggage for carrying belongings during travel.",
-    "category": "Equipment"
-  },
-  "frisbee": {
-    "name": "Frisbee",
-    "description": "Flying disc toy used for recreational activities.",
-    "category": "Recreation"
-  },
-  "skis": {
-    "name": "Skis",
-    "description": "Equipment for snow skiing and winter sports.",
-    "category": "Sports Equipment"
-  },
-  "snowboard": {
-    "name": "Snowboard",
-    "description": "Board used for descending snow-covered slopes.",
-    "category": "Sports Equipment"
-  },
-  "sports ball": {
-    "name": "Sports Ball",
-    "description": "Ball used in various sports and recreational activities.",
-    "category": "Sports Equipment"
-  },
-  "kite": {
-    "name": "Kite",
-    "description": "Tethered flying object, sometimes used for bird deterrence in agriculture.",
-    "category": "Recreation"
-  },
-  "baseball bat": {
-    "name": "Baseball Bat",
-    "description": "Equipment used in baseball sports.",
-    "category": "Sports Equipment"
-  },
-  "baseball glove": {
-    "name": "Baseball Glove",
-    "description": "Protective glove used for catching baseballs.",
-    "category": "Sports Equipment"
-  },
-  "skateboard": {
-    "name": "Skateboard",
-    "description": "Board with wheels used for skating and tricks.",
-    "category": "Sports Equipment"
-  },
-  "surfboard": {
-    "name": "Surfboard",
-    "description": "Board used for riding ocean waves.",
-    "category": "Sports Equipment"
-  },
-  "tennis racket": {
-    "name": "Tennis Racket",
-    "description": "Equipment used for playing tennis.",
-    "category": "Sports Equipment"
-  },
-  "bottle": {
-    "name": "Bottle",
-    "description": "Container for liquids, commonly used for water or agricultural solutions.",
-    "category": "Container"
-  },
-  "wine glass": {
-    "name": "Wine Glass",
-    "description": "Stemmed glass designed for drinking wine.",
-    "category": "Tableware"
-  },
-  "cup": {
-    "name": "Cup",
-    "description": "Small container for drinking beverages.",
-    "category": "Tableware"
-  },
-  "fork": {
-    "name": "Fork",
-    "description": "Utensil with prongs used for eating.",
-    "category": "Tableware"
-  },
-  "knife": {
-    "name": "Knife",
-    "description": "Cutting tool with a blade, used for food preparation or agricultural tasks.",
-    "category": "Tableware"
-  },
-  "spoon": {
-    "name": "Spoon",
-    "description": "Utensil with a shallow bowl for eating or serving.",
-    "category": "Tableware"
-  },
-  "bowl": {
-    "name": "Bowl",
-    "description": "Round container used for holding food or liquids.",
-    "category": "Tableware"
-  },
-  "banana": {
-    "name": "Banana",
-    "description": "Tropical fruit crop, yellow when ripe. Important agricultural product.",
-    "category": "Crop/Fruit"
-  },
-  "apple": {
-    "name": "Apple",
-    "description": "Popular fruit crop grown in orchards. Susceptible to various pests.",
-    "category": "Crop/Fruit"
-  },
-  "sandwich": {
-    "name": "Sandwich",
-    "description": "Food item consisting of ingredients between bread slices.",
-    "category": "Food"
-  },
-  "orange": {
-    "name": "Orange",
-    "description": "Citrus fruit crop requiring pest management for optimal yield.",
-    "category": "Crop/Fruit"
-  },
-  "broccoli": {
-    "name": "Broccoli",
-    "description": "Cruciferous vegetable crop that requires monitoring for pest infestations.",
-    "category": "Crop/Vegetable"
-  },
-  "carrot": {
-    "name": "Carrot",
-    "description": "Root vegetable crop grown for consumption, requires pest control.",
-    "category": "Crop/Vegetable"
-  },
-  "hot dog": {
-    "name": "Hot Dog",
-    "description": "Processed meat food item in an elongated bun.",
-    "category": "Food"
-  },
-  "pizza": {
-    "name": "Pizza",
-    "description": "Popular food dish with various toppings on a bread base.",
-    "category": "Food"
-  },
-  "donut": {
-    "name": "Donut",
-    "description": "Ring-shaped fried pastry dessert.",
-    "category": "Food"
-  },
-  "cake": {
-    "name": "Cake",
-    "description": "Sweet baked dessert food item.",
-    "category": "Food"
-  },
-  "chair": {
-    "name": "Chair",
-    "description": "Seating furniture commonly found in work or rest areas.",
-    "category": "Furniture"
-  },
-  "couch": {
-    "name": "Couch",
-    "description": "Large seating furniture for multiple people.",
-    "category": "Furniture"
-  },
-  "potted plant": {
-    "name": "Potted Plant",
-    "description": "Plant grown in a container, often for decoration or small-scale cultivation.",
-    "category": "Plant"
-  },
-  "bed": {
-    "name": "Bed",
-    "description": "Furniture designed for sleeping or resting.",
-    "category": "Furniture"
-  },
-  "dining table": {
-    "name": "Dining Table",
-    "description": "Table furniture used for eating meals.",
-    "category": "Furniture"
-  },
-  "toilet": {
-    "name": "Toilet",
-    "description": "Sanitation fixture for waste disposal.",
-    "category": "Fixture"
-  },
-  "tv": {
-    "name": "Television",
-    "description": "Electronic display device for viewing video content.",
-    "category": "Electronics"
-  },
-  "laptop": {
-    "name": "Laptop",
-    "description": "Portable computer often used for farm management and monitoring systems.",
-    "category": "Electronics"
-  },
-  "mouse": {
-    "name": "Mouse",
-    "description": "Computer input device for navigation and control.",
-    "category": "Electronics"
-  },
-  "remote": {
-    "name": "Remote Control",
-    "description": "Wireless device for controlling electronic equipment.",
-    "category": "Electronics"
-  },
-  "keyboard": {
-    "name": "Keyboard",
-    "description": "Input device with keys for typing and computer control.",
-    "category": "Electronics"
-  },
-  "cell phone": {
-    "name": "Cell Phone",
-    "description": "Mobile communication device, often used for farm management apps.",
-    "category": "Electronics"
-  },
-  "microwave": {
-    "name": "Microwave",
-    "description": "Kitchen appliance for heating food using electromagnetic radiation.",
-    "category": "Appliance"
-  },
-  "oven": {
-    "name": "Oven",
-    "description": "Kitchen appliance for baking and cooking food.",
-    "category": "Appliance"
-  },
-  "toaster": {
-    "name": "Toaster",
-    "description": "Small kitchen appliance for toasting bread.",
-    "category": "Appliance"
-  },
-  "sink": {
-    "name": "Sink",
-    "description": "Basin fixture for washing and water drainage.",
-    "category": "Fixture"
-  },
-  "refrigerator": {
-    "name": "Refrigerator",
-    "description": "Cooling appliance for food storage and preservation.",
-    "category": "Appliance"
-  },
-  "book": {
-    "name": "Book",
-    "description": "Printed or written work for reading and information.",
-    "category": "Item"
-  },
-  "clock": {
-    "name": "Clock",
-    "description": "Time-keeping device for tracking hours and minutes.",
-    "category": "Item"
-  },
-  "vase": {
-    "name": "Vase",
-    "description": "Container for holding cut flowers or decorative plants.",
-    "category": "Decor"
-  },
-  "scissors": {
-    "name": "Scissors",
-    "description": "Cutting tool with two blades, used for various tasks including plant maintenance.",
-    "category": "Tool"
-  },
-  "teddy bear": {
-    "name": "Teddy Bear",
-    "description": "Stuffed toy bear, commonly used as decoration or comfort item.",
-    "category": "Toy"
-  },
-  "hair drier": {
-    "name": "Hair Dryer",
-    "description": "Electric device for drying hair.",
-    "category": "Appliance"
-  },
-  "toothbrush": {
-    "name": "Toothbrush",
-    "description": "Oral hygiene tool for cleaning teeth.",
-    "category": "Personal Care"
+  "Beet spot flies": {
+    "name": "Beet Spot Flies",
+    "description": "Small flies that create characteristic leaf mines and spots on beet plants. They tunnel through leaf tissue, causing yellowing, reduced photosynthesis, and weakened plants. Heavy infestations can significantly reduce crop yield.",
+    "category": "Pest - Diptera",
+    "control_methods": {
+      "cultural": "Remove and destroy infected leaves immediately. Practice crop rotation with non-host crops for 2-3 years. Use floating row covers to prevent adult flies from laying eggs. Maintain field sanitation by removing plant debris.",
+      "biological": "Encourage natural predators like parasitic wasps (Dacnusa sibirica, Diglyphus isaea) and predatory beetles. Release parasitoid wasps for biological control.",
+      "chemical": "Apply neem oil spray (organic option) or spinosad-based insecticides. For severe infestations, use systemic insecticides like imidacloprid or thiamethoxam. Apply at early larval stages for best results.",
+      "timing": "Monitor plants weekly during growing season. Treat at first sign of leaf mining activity."
+    }
+  },
+  "Lawana imitata Melichar": {
+    "name": "Lawana Imitata Melichar",
+    "description": "A planthopper species that feeds on plant sap, causing stunted growth, yellowing, and transmission of plant diseases. They secrete honeydew which promotes sooty mold growth.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Remove alternate host plants and weeds around fields. Use healthy, disease-free planting material. Avoid excessive nitrogen fertilization which promotes soft growth.",
+      "biological": "Conserve natural enemies including spiders, lady beetles, and parasitic wasps. Introduce egg parasitoids like Anagrus species.",
+      "chemical": "Use insecticidal soap or neem oil for organic control. Apply systemic insecticides like imidacloprid for heavy infestations. Rotate different insecticide classes to prevent resistance.",
+      "timing": "Scout fields regularly during growing season. Apply treatments when populations exceed economic threshold."
+    }
+  },
+  "Locustoidea": {
+    "name": "Locusts and Grasshoppers",
+    "description": "Large-bodied insects with powerful hind legs for jumping. They are voracious feeders that can defoliate entire crops in hours. They eat leaves, stems, flowers, and fruits of a wide variety of plants.",
+    "category": "Pest - Orthoptera",
+    "control_methods": {
+      "cultural": "Plow fields deeply in fall to destroy egg pods. Remove weeds and alternate host plants. Use barrier crops or trap crops to concentrate pests for targeted treatment.",
+      "biological": "Encourage natural predators including birds, parasitic flies, and predatory beetles. Use biological control agent Metarhizium acridum (Green Muscle fungus).",
+      "chemical": "Apply botanical insecticides like neem or pyrethrum for organic control. Use conventional insecticides like malathion, carbaryl, or diflubenzuron. For large infestations, consider aerial spraying with fipronil or deltamethrin.",
+      "timing": "Treat early in morning when locusts are less active. Target nymphs before they develop wings for better control."
+    }
+  },
+  "Potosiabre vitarsis": {
+    "name": "Flower Chafer Beetle",
+    "description": "Large beetles that feed on flowers, pollen, and fruits. Adults damage blossoms and developing fruits, while larvae feed on decaying organic matter in soil. Can significantly reduce fruit set and quality.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Hand-pick adults from flowers in early morning when they're sluggish. Remove overripe or damaged fruits promptly. Reduce mulch thickness to discourage larval development.",
+      "biological": "Encourage insectivorous birds and parasitic wasps. Use entomopathogenic nematodes for larval control in soil.",
+      "chemical": "Spray affected plants with neem oil or pyrethrin-based insecticides. For severe infestations, use carbaryl or permethrin. Apply during flowering season when adults are active.",
+      "timing": "Monitor flowers daily during blooming period. Treat immediately when beetles are first observed."
+    }
+  },
+  "Rice Stemfly": {
+    "name": "Rice Stem Fly",
+    "description": "Small flies whose larvae bore into rice stems, causing 'deadheart' in vegetative stage and 'whitehead' in reproductive stage. Infested tillers produce empty or partially filled grains, severely reducing yield.",
+    "category": "Pest - Diptera",
+    "control_methods": {
+      "cultural": "Use resistant rice varieties. Practice synchronous planting within community. Adjust planting dates to avoid peak fly populations. Remove and destroy stubble after harvest.",
+      "biological": "Conserve natural enemies like parasitic wasps (Tetrastichus spp.) and predatory bugs. Avoid broad-spectrum insecticides that harm beneficial insects.",
+      "chemical": "Apply granular insecticides (carbofuran, fipronil) at base of plants during early tillering. Use foliar sprays of chlorpyrifos or thiamethoxam if needed. Apply before larvae enter stems.",
+      "timing": "Apply preventive treatment 7-10 days after transplanting. Monitor for deadheart symptoms weekly."
+    }
+  },
+  "alfalfa plant bug": {
+    "name": "Alfalfa Plant Bug",
+    "description": "Green insects that pierce plant tissue and suck sap, causing distorted growth, yellowing, and stunted plants. They feed on buds, flowers, and developing seeds, significantly reducing forage quality and seed yield.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Cut alfalfa early to disrupt bug life cycle. Use resistant varieties when available. Strip-cut fields to concentrate bugs for spot treatment.",
+      "biological": "Preserve natural predators including big-eyed bugs, damsel bugs, and parasitic wasps. Avoid mowing entire field at once to maintain predator populations.",
+      "chemical": "Apply insecticides only when population exceeds economic threshold (20-30 bugs per 10 sweeps). Use selective products like flonicamid or spirotetramat to preserve beneficials. Neem oil for organic operations.",
+      "timing": "Scout fields with sweep nets weekly. Treat when threshold is exceeded and before first flower buds appear."
+    }
+  },
+  "alfalfa weevil": {
+    "name": "Alfalfa Weevil",
+    "description": "Small snout beetles whose larvae feed on alfalfa leaves, creating a skeletonized appearance. Adults and larvae can cause severe defoliation, reducing forage quality and yield. Most damaging in spring.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Harvest early in spring to remove larvae and eggs. Use resistant alfalfa varieties. Remove crop residue promptly after cutting. Maintain field sanitation.",
+      "biological": "Conserve native parasitoid wasps (Bathyplectes spp.) which naturally control weevil populations. Fungal pathogen Zoophthora phytonomi can cause natural die-offs in humid conditions.",
+      "chemical": "Apply pyrethroid insecticides (permethrin, lambda-cyhalothrin) when larvae reach economic threshold. Use malathion or carbaryl as alternatives. For organic: apply pyrethrin or spinosad.",
+      "timing": "Sample stems for larvae in early spring. Treat when 25-40% of stems show feeding damage with 2-3 larvae per stem."
+    }
+  },
+  "aphids": {
+    "name": "Aphids",
+    "description": "Tiny soft-bodied insects that cluster on leaves, stems, and buds. They suck plant sap, causing curling, yellowing, and stunted growth. Aphids excrete sticky honeydew that attracts ants and promotes black sooty mold. They also transmit numerous plant viruses.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Use reflective mulches to repel aphids. Plant companion plants like garlic, chives, or marigolds. Remove heavily infested plant parts. Spray plants with strong water jets to dislodge aphids.",
+      "biological": "Encourage natural predators: ladybugs, lacewings, hoverfly larvae, and parasitic wasps. Release purchased ladybugs or lacewings for severe infestations. Plant flowering plants to attract beneficials.",
+      "chemical": "Spray with insecticidal soap or neem oil for organic control. Use horticultural oils to smother aphids. For severe cases: apply imidacloprid, thiamethoxam, or pyrethroids. Rotate insecticide modes of action.",
+      "timing": "Inspect plants 2-3 times weekly. Treat at first sign of infestation before populations explode."
+    }
+  },
+  "army worm": {
+    "name": "Army Worm",
+    "description": "Caterpillars that travel in large groups ('armies'), devouring grass and crop foliage. They feed on leaves, stems, and can strip entire fields. Most active at night and on cloudy days. Can cause rapid, devastating damage to corn, wheat, and grass crops.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Plow fields immediately after harvest to destroy pupae. Use trap crops around field perimeters. Maintain clean field borders free of grassy weeds. Deep tillage exposes pupae to predators.",
+      "biological": "Apply Bacillus thuringiensis (Bt) for organic control. Use nuclear polyhedrosis virus (NPV) specific to armyworms. Encourage natural enemies: parasitic wasps, tachinid flies, birds, and ground beetles.",
+      "chemical": "Apply insecticides when larvae are small (before 3rd instar). Use spinosad (organic), chlorantraniliprole, methomyl, or pyrethroids. Apply in evening when larvae are actively feeding.",
+      "timing": "Scout fields daily during outbreak periods. Treat immediately when 3-5 larvae per plant are found."
+    }
+  },
+  "asiatic rice borer": {
+    "name": "Asiatic Rice Borer",
+    "description": "Moth larvae that bore into rice stems, causing 'deadheart' in vegetative stage and 'whitehead' in reproductive stage. They tunnel inside stems, disrupting nutrient flow and causing tillers to die. Major pest of rice causing significant yield losses.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Use resistant rice varieties. Practice clean cultivation by removing stubble and ratoon crops. Synchronize planting dates within community. Maintain proper plant spacing and avoid excessive nitrogen.",
+      "biological": "Release Trichogramma egg parasitoids at 5-7 day intervals. Apply Bacillus thuringiensis (Bt) formulations. Conserve spiders and other natural predators in rice fields.",
+      "chemical": "Apply cartap hydrochloride or chlorantraniliprole at early larval stage before boring. Use granular formulations (carbofuran) in leaf axils. Foliar sprays less effective once larvae enter stems.",
+      "timing": "Monitor for egg masses and young larvae. Apply treatment at maximum tillering and booting stages."
+    }
+  },
+  "beet army worm": {
+    "name": "Beet Armyworm",
+    "description": "Destructive caterpillars that feed on over 100 plant species. They skeletonize leaves by eating tissue between veins, and bore into buds, fruits, and stems. Young larvae feed in groups; older larvae feed individually. Can rapidly defoliate entire crops.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Remove weeds and volunteer plants that serve as alternate hosts. Destroy crop residues after harvest. Use pheromone traps to monitor adult moth populations. Plant early to avoid peak populations.",
+      "biological": "Apply Bacillus thuringiensis (Bt) or spinosad for organic control. Release parasitic wasps (Trichogramma). Encourage predators: lacewings, assassin bugs, and parasitic flies.",
+      "chemical": "Treat early when larvae are small (1st-2nd instar). Use chlorantraniliprole, indoxacarb, or methomyl. Avoid pyrethroids due to resistance. Rotate insecticide modes of action.",
+      "timing": "Use pheromone traps to detect adult activity. Scout plants for egg masses and small larvae. Treat at economic threshold."
+    }
+  },
+  "beet fly": {
+    "name": "Beet Fly (Leaf Miner Fly)",
+    "description": "Small flies whose larvae mine inside beet leaves, creating serpentine tunnels visible as white or brown trails. Heavy infestations reduce leaf area and photosynthesis, weakening plants and reducing root yield and sugar content.",
+    "category": "Pest - Diptera",
+    "control_methods": {
+      "cultural": "Remove and destroy infested leaves. Practice 2-3 year crop rotation. Use row covers to exclude adult flies. Maintain weed-free fields as many weeds are alternate hosts. Plow under crop residues promptly.",
+      "biological": "Encourage parasitic wasps (Dacnusa and Diglyphus species) that attack larvae inside mines. Conserve ground beetles and other predators. Avoid broad-spectrum insecticides.",
+      "chemical": "Apply neem oil or spinosad for organic control. Use systemic insecticides (imidacloprid, thiamethoxam) as seed treatments or soil applications. Foliar sprays of cyromazine effective against larvae.",
+      "timing": "Monitor yellow sticky traps for adult flies. Inspect leaves for eggs and early mines. Treat before mines become extensive."
+    }
+  },
+  "beet weevil": {
+    "name": "Beet Weevil",
+    "description": "Small dark beetles with a snout that feed on beet leaves as adults and roots as larvae. Adults chew irregular holes in leaves while larvae tunnel into roots, creating entry points for rot diseases. Can cause severe damage to sugar beets and table beets.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Practice crop rotation with non-host crops for 2-3 years. Remove volunteer beets and weed hosts. Deep plow in fall to bury crop residue and expose overwintering adults. Plant trap crops to concentrate beetles.",
+      "biological": "Encourage ground beetles, rove beetles, and insectivorous birds. Use entomopathogenic nematodes for larval control in soil. Conserve parasitoid wasps.",
+      "chemical": "Apply systemic insecticides (imidacloprid, clothianidin) as seed treatments for season-long protection. Foliar sprays of pyrethroids or carbaryl when adults appear. For organic: use pyrethrin or neem oil.",
+      "timing": "Monitor fields during emergence for adult beetles. Treat when beetles are first observed or when damage exceeds threshold."
+    }
+  },
+  "bird cherry-oataphid": {
+    "name": "Bird Cherry-Oat Aphid",
+    "description": "Dark-colored aphids that infest cereal crops, especially oats, wheat, and barley. They suck sap from leaves and stems, causing yellowing and stunted growth. Major concern as vectors of Barley Yellow Dwarf Virus (BYDV), which can cause severe yield losses.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Plant early or late to avoid peak aphid migration periods. Use resistant or tolerant cereal varieties. Remove volunteer cereals and grassy weeds that harbor aphids. Maintain adequate plant nutrition.",
+      "biological": "Conserve natural enemies: lady beetles, lacewings, hoverfly larvae, and parasitic wasps. Avoid broad-spectrum insecticides early season to preserve beneficials. Plant flowering borders to attract predators.",
+      "chemical": "Apply insecticides only when economic threshold is exceeded (10-15 aphids per tiller before boot stage). Use selective aphicides like pirimicarb or flonicamid. For organic: neem oil or insecticidal soap.",
+      "timing": "Scout fields weekly from tillering through grain fill. Monitor for aphid colonies and BYDV symptoms."
+    }
+  },
+  "black cutworm": {
+    "name": "Black Cutworm",
+    "description": "Nocturnal caterpillars that cut seedlings at soil level, causing plant death. They hide in soil during day and emerge at night to feed. Can destroy entire crops by cutting stems of young plants. Particularly damaging to corn, vegetables, and cotton.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Control weeds before planting as moths prefer to lay eggs in weedy fields. Delay planting if heavy weed cover exists. Create 'weed-free zones' around fields. Deep tillage exposes larvae and pupae to predators.",
+      "biological": "Apply Bacillus thuringiensis (Bt) or entomopathogenic nematodes to soil. Encourage ground beetles, parasitic wasps, and birds. Use pheromone traps to monitor moth flights.",
+      "chemical": "Apply insecticides to soil surface and base of plants at dusk when larvae emerge. Use chlorpyrifos, lambda-cyhalothrin, or bifenthrin. For organic: spinosad or pyrethrin. Apply as curative treatment when cutting is observed.",
+      "timing": "Scout fields daily for cut plants. Count larvae by digging around damaged plants. Treat when 3-5% of plants show cutting damage."
+    }
+  },
+  "brown plant hopper": {
+    "name": "Brown Planthopper",
+    "description": "Small brown insects that suck sap from rice plants, causing 'hopper burn' - circular patches of dried, dead plants. They inject toxic saliva and transmit rice viruses including grassy stunt and ragged stunt. One of the most destructive rice pests worldwide.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Use resistant rice varieties with BPH resistance genes. Avoid excessive nitrogen fertilization. Maintain shallow water depth (2-5 cm) in fields. Practice synchronous planting. Remove stubble and ratoons after harvest.",
+      "biological": "Conserve natural enemies: spiders, lady beetles, damsel bugs, and parasitoid wasps. Avoid early-season insecticide applications that kill beneficials. Use biological control agents like Cyrtorhinus lividipennis.",
+      "chemical": "Apply insecticides only when population exceeds threshold (10-15 per plant). Use selective insecticides: buprofezin, pymetrozine, or dinotefuran. Avoid pyrethroids which cause resurgence. Rotate modes of action.",
+      "timing": "Monitor plants weekly using stem immersion method. Treat at tillering and booting stages if threshold exceeded."
+    }
+  },
+  "cabbage army worm": {
+    "name": "Cabbage Armyworm (Cabbage Looper)",
+    "description": "Green caterpillars that feed on cabbage family crops and many vegetables. They chew large irregular holes in leaves, contaminate heads with frass, and bore into developing heads. Can completely defoliate plants if left unchecked.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Use row covers to exclude egg-laying moths. Remove crop debris after harvest. Inspect transplants carefully. Hand-pick larvae from plants. Use yellow sticky traps to monitor moths. Rotate crops.",
+      "biological": "Apply Bacillus thuringiensis var. kurstaki (Btk) for excellent organic control. Release Trichogramma wasps for egg parasitism. Encourage parasitic wasps, tachinid flies, and predatory bugs.",
+      "chemical": "Spray spinosad (organic), indoxacarb, or chlorantraniliprole when larvae are small. Apply in evening when larvae are feeding. Rotate different insecticide classes. Avoid pyrethroids alone due to resistance.",
+      "timing": "Scout plants 2-3 times weekly. Look for eggs on undersides of leaves. Treat when 2-3 larvae per plant are found, before they damage heads."
+    }
+  },
+  "cerodonta denticornis": {
+    "name": "Cerodonta Denticornis (Grass Fly)",
+    "description": "Leaf-mining flies that attack cereal crops and grasses. Larvae create mines in leaves, reducing photosynthetic area and plant vigor. Can cause significant damage to young wheat, barley, and oat crops.",
+    "category": "Pest - Diptera",
+    "control_methods": {
+      "cultural": "Use clean, certified seed. Practice crop rotation with non-cereal crops. Remove volunteer cereals and grassy weeds. Adjust planting dates to avoid peak fly activity. Maintain field sanitation.",
+      "biological": "Conserve parasitoid wasps that attack larvae in leaf mines. Encourage predatory beetles and bugs. Avoid unnecessary insecticide applications that harm beneficial insects.",
+      "chemical": "Apply seed treatments with systemic insecticides (imidacloprid, clothianidin) for preventive control. Foliar sprays of dimethoate or lambda-cyhalothrin if infestations are severe. Timing is critical before larvae enter mines.",
+      "timing": "Monitor young plants for leaf mining damage. Treat at early growth stages when first mines appear."
+    }
+  },
+  "corn borer": {
+    "name": "Corn Borer (European Corn Borer)",
+    "description": "Destructive moth larvae that bore into corn stalks, ears, and tassels. They tunnel through stalks causing lodging, break tassels reducing pollination, and damage ears allowing fungal infection. One of the most economically damaging corn pests.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Shred and plow under corn residue after harvest to kill overwintering larvae. Plant early-maturing varieties. Use Bt corn hybrids. Plant early to avoid peak borer flights. Remove corn volunteers.",
+      "biological": "Plant Bt corn for excellent control. Release Trichogramma wasps for egg parasitism. Apply Bacillus thuringiensis sprays. Encourage parasitic wasps, tachinid flies, and other natural enemies.",
+      "chemical": "Apply insecticides when 50% of plants show whorl feeding and before larvae bore into stalks. Use chlorantraniliprole, lambda-cyhalothrin, or spinosad. Foliar sprays ineffective once borers enter stalks.",
+      "timing": "Scout for egg masses and whorl feeding. Use pheromone traps to monitor moth flights. Treat during peak egg hatch, typically at 6-8 leaf stage."
+    }
+  },
+  "english grain aphid": {
+    "name": "English Grain Aphid",
+    "description": "Green to brown aphids that infest cereal crops, particularly wheat, barley, and oats. They colonize heads and flag leaves during grain fill, sucking sap and reducing kernel weight. Heavy infestations cause shriveled grain and significant yield loss.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Plant early-maturing varieties to escape peak aphid populations. Use resistant or tolerant varieties. Maintain balanced fertility; avoid excessive nitrogen. Control grassy weeds and volunteer cereals.",
+      "biological": "Conserve natural enemies including lady beetles, lacewings, parasitic wasps, and hoverfly larvae. Establish flowering borders to provide alternate food sources. Delay insecticide application to allow natural control.",
+      "chemical": "Apply insecticides only when threshold is exceeded (10-15 aphids per head after flowering). Use selective aphicides like pirimicarb or thiamethoxam. For organic: neem oil, insecticidal soap, or pyrethrin.",
+      "timing": "Scout fields weekly from heading through grain fill. Count aphids on flag leaves and heads. Treat only if threshold exceeded and natural enemies insufficient."
+    }
+  },
+  "flax budworm": {
+    "name": "Flax Budworm",
+    "description": "Small caterpillars that feed on flax buds, flowers, and developing seeds. They bore into buds and bolls, causing bud drop and reduced seed set. Can significantly reduce flax yield and quality.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Plant early to reduce budworm impact. Use crop rotation. Remove volunteer flax plants. Maintain weed-free fields. Deep plow after harvest to destroy overwintering pupae.",
+      "biological": "Apply Bacillus thuringiensis (Bt) for organic control. Encourage parasitic wasps, tachinid flies, and predatory bugs. Use pheromone traps to monitor moth populations.",
+      "chemical": "Apply insecticides when budworms are detected before they enter buds. Use chlorantraniliprole, lambda-cyhalothrin, or methomyl. For organic: spinosad or pyrethrin. Apply during late afternoon or evening.",
+      "timing": "Scout fields from early bud stage through flowering. Look for young larvae and damaged buds. Treat at economic threshold before extensive bud damage occurs."
+    }
+  },
+  "flea beetle": {
+    "name": "Flea Beetle",
+    "description": "Tiny jumping beetles that chew small round holes in leaves, giving them a 'shot-hole' appearance. Adults feed on foliage while larvae feed on roots. Can severely damage seedlings and transmit plant diseases. Attack crucifer crops, potatoes, corn, and many vegetables.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Use row covers on young plants until they're established. Plant later to avoid peak beetle emergence. Use trap crops like radishes. Maintain healthy soil for vigorous plant growth. Remove crop debris and weeds.",
+      "biological": "Encourage natural predators: tachinid flies, braconid wasps, and predatory nematodes for larvae. Use beneficial nematodes to control larvae in soil.",
+      "chemical": "Apply neem oil or pyrethrin for organic control. Use systemic insecticides (imidacloprid, thiamethoxam) as seed treatments. Foliar applications: pyrethroids, carbaryl, or spinosad when beetles are active.",
+      "timing": "Monitor seedlings daily during vulnerable stage. Treat when 10-20% leaf area is damaged or when beetles exceed threshold on young plants."
+    }
+  },
+  "grain spreader thrips": {
+    "name": "Grain Thrips (Grain Spreader Thrips)",
+    "description": "Minute slender insects that feed on cereal heads, particularly wheat and barley. They rasp grain surfaces and suck sap, causing silvering, shriveling, and reduced grain quality. Can significantly reduce test weight and grain grade.",
+    "category": "Pest - Thysanoptera",
+    "control_methods": {
+      "cultural": "Use resistant or tolerant varieties. Plant early-maturing varieties to escape peak thrips populations. Maintain good crop nutrition for vigor. Remove grassy weeds and volunteer cereals.",
+      "biological": "Conserve predatory mites, minute pirate bugs, and lacewing larvae that feed on thrips. Use blue sticky traps for monitoring. Avoid broad-spectrum insecticides that harm beneficials.",
+      "chemical": "Apply insecticides only when economic threshold is exceeded (20-40 thrips per head). Use dimethoate, lambda-cyhalothrin, or spinosad. Add spreader-sticker for better coverage. For organic: spinosad or insecticidal soap.",
+      "timing": "Scout fields from heading through milk stage. Shake heads over white paper to count thrips. Treat if threshold exceeded during grain fill."
+    }
+  },
+  "green bug": {
+    "name": "Greenbug Aphid",
+    "description": "Pale green aphids that inject toxic saliva while feeding on small grains and sorghum, causing distinctive reddish-brown spots and plant death. Unlike other aphids, greenbug toxins kill plant tissue. Heavy infestations can destroy entire fields.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Plant resistant varieties with greenbug resistance genes. Adjust planting dates to avoid peak populations. Maintain balanced fertility. Destroy volunteer wheat and barley. Use tolerant varieties in high-risk areas.",
+      "biological": "Conserve natural enemies including lady beetles, lacewings, parasitic wasps (Lysiphlebus testaceipes), and hoverfly larvae. Establish beneficial insect habitats. Delay insecticide applications when possible.",
+      "chemical": "Treat when threshold is exceeded (varies by crop stage and natural enemy presence). Use selective aphicides: pirimicarb or flonicamid. Systemic options: imidacloprid or thiamethoxam. For organic: neem oil or insecticidal soap.",
+      "timing": "Scout fields twice weekly. Count greenbugs per foot of row or per tiller. Treat when threshold exceeded considering crop stage and natural enemies present."
+    }
+  },
+  "grub": {
+    "name": "White Grubs (Scarab Beetle Larvae)",
+    "description": "C-shaped beetle larvae with white bodies and brown heads that live in soil and feed on plant roots. They damage turf grass, corn, small grains, and vegetables by severing roots, causing wilting, yellowing, and plant death. Can destroy entire lawns and fields.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Avoid planting in fields with history of grub damage. Deep plow in fall to expose grubs to predators and weather. Maintain healthy turf through proper watering and fertilization. Remove thatch buildup. Avoid lights that attract egg-laying beetles.",
+      "biological": "Apply beneficial nematodes (Heterorhabditis bacteriophora, Steinernema species) to soil when grubs are small. Use Bacillus thuringiensis var. japonensis (for Japanese beetle grubs). Encourage birds, moles, and parasitic wasps.",
+      "chemical": "Apply preventive treatments with imidacloprid, clothianidin, or thiamethoxam in early summer. Curative treatments: trichlorfon or carbaryl when grubs are actively feeding. For organic: neem oil soil drench or milky spore disease.",
+      "timing": "Apply preventive treatments in June-July before eggs hatch. Curative treatments in late summer-fall or spring when grubs are feeding near surface. Confirm presence with soil sampling."
+    }
+  },
+  "large cutworm": {
+    "name": "Large Cutworm",
+    "description": "Robust caterpillars that cut plants at or below soil surface at night. They hide under debris or in soil during day. Can cut multiple plants in one night, causing severe stand loss in corn, vegetables, cotton, and other crops. Particularly damaging to transplants.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Control weeds 2-3 weeks before planting; moths prefer weedy fields for egg-laying. Create a weed-free zone around field borders. Use plant collars (paper/cardboard) around transplants. Deep cultivation exposes cutworms to predators.",
+      "biological": "Apply Bacillus thuringiensis (Bt) to soil surface and plant bases. Use entomopathogenic nematodes. Encourage ground beetles, parasitic wasps, tachinid flies, and birds. Use pheromone traps to monitor adult flights.",
+      "chemical": "Apply insecticides at dusk as a spray to soil surface and plant bases. Use chlorpyrifos, bifenthrin, or lambda-cyhalothrin. Apply when cutting is first observed. For organic: spinosad or pyrethrin.",
+      "timing": "Inspect fields early morning for cut plants. Dig around bases to find larvae. Treat when 2-5% of plants are cut or when 1 cutworm per 4 plants is found."
+    }
+  },
+  "longlegged spider mite": {
+    "name": "Long-legged Spider Mite",
+    "description": "Tiny mites with long legs that feed on plant sap, causing stippling, yellowing, and bronzing of leaves. They produce fine webbing and can rapidly build large populations in hot, dry conditions. Attack numerous crops including vegetables, ornamentals, and fruit trees.",
+    "category": "Pest - Acari",
+    "control_methods": {
+      "cultural": "Maintain adequate soil moisture; stressed plants more susceptible. Remove heavily infested leaves. Spray plants with strong water jets to dislodge mites. Remove weed hosts. Avoid dusty conditions that favor mites.",
+      "biological": "Release predatory mites (Phytoseiulus persimilis, Neoseiulus californicus). Encourage lady beetles, lacewings, and minute pirate bugs. Plant flowering plants to attract beneficials. Avoid broad-spectrum insecticides.",
+      "chemical": "Use insecticidal soap or horticultural oil for organic control. Apply sulfur sprays. For severe infestations: abamectin, spiromesifen, or bifenazate. Rotate miticide modes of action to prevent resistance. Ensure thorough coverage of leaf undersides.",
+      "timing": "Inspect leaf undersides weekly during hot, dry weather. Treat when mites are first detected before populations explode. Reapply as needed per label instructions."
+    }
+  },
+  "lytta polita": {
+    "name": "Blister Beetle (Lytta Polita)",
+    "description": "Elongated beetles that feed voraciously on flowers and foliage of various crops. They often appear in large swarms and can defoliate plants rapidly. Contain cantharidin, a toxic blistering agent, making them hazardous to livestock if consumed in hay.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Monitor fields regularly during beetle season (mid-summer). Hand-pick beetles wearing gloves (they cause blisters). Avoid crushing beetles on skin. Remove infested plant parts. Use row covers on susceptible crops.",
+      "biological": "Encourage birds and parasitic flies that attack larvae. Ground-nesting bees host blister beetle larvae, so maintain bee habitats for overall ecosystem health while managing beetle populations.",
+      "chemical": "Apply insecticides when beetles first appear and before extensive damage. Use carbaryl, pyrethroids (permethrin, lambda-cyhalothrin), or spinosad. For organic: pyrethrin sprays. DO NOT use contaminated forage for hay.",
+      "timing": "Scout fields daily during summer months. Treat immediately when swarms appear, especially on flowering crops. Multiple treatments may be needed for successive beetle waves."
+    }
+  },
+  "meadow moth": {
+    "name": "Meadow Moth (Lawn Moth)",
+    "description": "Small moth larvae (sod webworms) that feed on grass and cereal crops. They live in silk-lined tunnels near soil surface and emerge at night to feed on grass blades, causing irregular brown patches. Can damage lawns, pastures, and grain crops.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Maintain healthy, vigorous turf through proper watering, mowing, and fertilization. Remove thatch buildup. Water deeply and infrequently. Set mower blade high; longer grass less susceptible. For crops, use resistant varieties.",
+      "biological": "Apply Bacillus thuringiensis var. kurstaki (Btk) for organic control. Use beneficial nematodes (Steinernema carpocapsae). Encourage birds, parasitic wasps, and ground beetles. Avoid excessive insecticide use.",
+      "chemical": "Apply insecticides in early evening when larvae are active. Use spinosad (organic), bifenthrin, lambda-cyhalothrin, or trichlorfon. Water in lightly after application. Treat when damage first appears.",
+      "timing": "Look for small brown moths flying in zigzag pattern over grass at dusk. Inspect for larvae and damage. Treat when 10-15 larvae per square yard are found."
+    }
+  },
+  "mole cricket": {
+    "name": "Mole Cricket",
+    "description": "Large underground insects with shovel-like front legs adapted for digging. They tunnel through soil, damaging plant roots and seedlings, and create raised tunnels in turf. Feed on roots, seeds, and small insects. Most active at night and highly destructive to lawns, golf courses, and crops.",
+    "category": "Pest - Orthoptera",
+    "control_methods": {
+      "cultural": "Reduce irrigation to make soil less attractive; they prefer moist soil. Avoid over-watering at night. Remove thatch. Use trap boards or shallow pans with soapy water to monitor populations. Deep tillage disrupts tunnels.",
+      "biological": "Use Steinernema scapterisci (nematode specifically for mole crickets). Encourage natural predators: birds, armadillos, and parasitic flies. Apply nematodes in early summer when nymphs are present.",
+      "chemical": "Apply granular insecticides (imidacloprid, clothianidin, fipronil) in early summer targeting nymphs. Water in thoroughly after application. For adults: bifenthrin or lambda-cyhalothrin. Baits containing orthoboric acid are effective.",
+      "timing": "Monitor with soap flush (2 tablespoons dish soap per gallon water over 2 sq ft). Treat in June-July when nymphs are small and most vulnerable. Evening applications most effective."
+    }
+  },
+  "paddy stem maggot": {
+    "name": "Paddy Stem Maggot (Rice Stem Maggot)",
+    "description": "Fly larvae that bore into rice tillers, causing 'onion leaf' symptoms where central leaf turns yellowish and dries. Infested shoots produce no panicles. Can cause 10-50% yield loss in susceptible varieties. Most damaging during early tillering stage.",
+    "category": "Pest - Diptera",
+    "control_methods": {
+      "cultural": "Use resistant rice varieties. Practice synchronous planting within community. Drain water from field periodically to expose eggs and young larvae. Remove and destroy infested tillers. Avoid excessive nitrogen fertilizer.",
+      "biological": "Conserve natural enemies including parasitic wasps, spiders, and predatory beetles. Avoid broad-spectrum insecticides during early season. Encourage predator populations through habitat management.",
+      "chemical": "Apply granular insecticides (carbofuran, fipronil) to leaf sheaths at maximum tillering. Foliar sprays of chlorpyrifos or triazophos if needed. Apply before larvae enter stems for best control.",
+      "timing": "Monitor for 'onion leaf' symptoms starting 2-3 weeks after transplanting. Examine leaf sheaths for eggs and young larvae. Treat when 5-10% of tillers show symptoms."
+    }
+  },
+  "peach borer": {
+    "name": "Peach Tree Borer",
+    "description": "Moth larvae that bore into trunks and main roots of stone fruit trees (peach, plum, cherry, apricot). They feed on cambium, creating gum-filled wounds ('gummosis'). Can girdle and kill young trees or severely weaken mature trees, making them susceptible to disease and wind damage.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Keep tree trunks clean and free from weeds. Remove gum masses and dig out larvae with wire. Apply trunk wraps or tree guards. Maintain tree vigor through proper watering and fertilization. Avoid trunk injuries that attract egg-laying.",
+      "biological": "Use pheromone mating disruption for large orchards. Apply parasitic nematodes (Steinernema feltiae) to trunk base and soil. Encourage woodpeckers and parasitic wasps. Use pheromone traps for monitoring.",
+      "chemical": "Apply chlorpyrifos or permethrin sprays to trunk and main scaffold branches in late summer/early fall. For organic: spinosad. Paint trunk bases with latex paint mixed with insecticide. Apply at egg-laying and hatching periods.",
+      "timing": "Monitor with pheromone traps for moth flights. Apply treatments in late summer (August-September) when moths are active. Inspect for gummosis regularly. May need spring treatment for missed larvae."
+    }
+  },
+  "penthaleus major": {
+    "name": "Winter Grain Mite (Penthaleus Major)",
+    "description": "Small reddish-brown mites with distinctive red spot on back. They feed on cereals, pastures, and legumes during cool weather, causing silvering and whitening of leaves. Can severely damage seedlings and reduce stand establishment. Most active in fall and spring.",
+    "category": "Pest - Acari",
+    "control_methods": {
+      "cultural": "Delay planting until after mite activity subsides. Use later-maturing varieties. Maintain adequate soil moisture. Avoid planting next to heavily infested pastures. Control weedy grasses that harbor mites.",
+      "biological": "Conserve predatory mites and other beneficial arthropods. Hot, dry weather naturally suppresses populations. Avoid unnecessary pesticide applications that harm beneficials.",
+      "chemical": "Apply dimethoate or omethoate when mite densities exceed threshold (15-20 mites per linear foot of row). For organic options, use sulfur sprays or horticultural oils. Apply during cool parts of day when mites are active on foliage.",
+      "timing": "Scout fields in cool, overcast weather when mites move to leaf surfaces. Monitor seedlings and young plants closely. Treat when threshold exceeded and damage is progressing."
+    }
+  },
+  "red spider": {
+    "name": "Red Spider Mite (Two-Spotted Spider Mite)",
+    "description": "Tiny mites (less than 1mm) that suck plant sap, causing stippling, yellowing, and bronzing of leaves. They produce fine webbing on plants. Can complete life cycle in 1-2 weeks during hot weather, rapidly building huge populations. Attack nearly all crops and ornamentals.",
+    "category": "Pest - Acari",
+    "control_methods": {
+      "cultural": "Maintain adequate soil moisture; drought-stressed plants highly susceptible. Spray plants with water to increase humidity and dislodge mites. Remove heavily infested plant parts. Avoid excessive nitrogen. Control dust with irrigation or barriers.",
+      "biological": "Release predatory mites (Phytoseiulus persimilis, Neoseiulus californicus, Amblyseius andersoni). Encourage lady beetles, lacewings, minute pirate bugs, and predatory thrips. Plant pollen-providing flowers for predators.",
+      "chemical": "Use insecticidal soap or horticultural oil for organic control. Apply sulfur (avoid when temperatures exceed 90°F). Chemical options: abamectin, bifenazate, spiromesifen, or fenpyroximate. Rotate miticide classes. Spray leaf undersides thoroughly.",
+      "timing": "Inspect leaf undersides weekly, especially in hot, dry weather. Use hand lens or shake test. Treat at first sign of infestation before population explodes. Multiple applications usually needed."
+    }
+  },
+  "rice gall midge": {
+    "name": "Rice Gall Midge",
+    "description": "Small flies whose larvae cause distinctive tubular galls (silver shoots or 'onion shoots') on rice tillers. Infested tillers fail to produce panicles. Can cause 20-90% yield loss in susceptible varieties. Major pest in many rice-growing regions.",
+    "category": "Pest - Diptera",
+    "control_methods": {
+      "cultural": "Plant resistant varieties with gall midge resistance genes (most effective method). Practice community-wide synchronous planting. Destroy stubble and ratoon crops. Plow deep to bury stubble. Avoid staggered planting.",
+      "biological": "Conserve parasitoid wasps (Platygaster species) that naturally control gall midge. Maintain spiders and predatory beetles. Avoid unnecessary insecticide use that kills natural enemies.",
+      "chemical": "Apply carbofuran or fipronil granules in leaf axils at tillering if susceptible variety is grown. Foliar sprays of chlorpyrifos or triazophos. Seed treatment with systemic insecticides. Only needed if resistant varieties unavailable.",
+      "timing": "Monitor for adult flies and silver shoots from 7-10 days after transplanting. Count adults in fields at dawn. Check for galls weekly during tillering. Use resistant varieties as primary control."
+    }
+  },
+  "rice leaf caterpillar": {
+    "name": "Rice Leaf Caterpillar (Rice Leafroller)",
+    "description": "Green caterpillars that fold or roll rice leaves lengthwise with silk and feed inside, creating white streaks. They skeletonize leaf tissue between veins. Heavy infestations reduce photosynthesis and can significantly impact grain filling and yield.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Remove and destroy rolled leaves manually in small areas. Avoid excessive nitrogen fertilization which promotes soft, succulent growth. Maintain proper plant spacing. Use balanced fertilization for plant vigor.",
+      "biological": "Apply Bacillus thuringiensis (Bt) for excellent organic control. Release Trichogramma egg parasitoids. Conserve spiders, predatory bugs, and parasitic wasps. Encourage birds in rice fields.",
+      "chemical": "Apply chlorantraniliprole, indoxacarb, or cartap hydrochloride when larvae are young and before they roll leaves. Once protected inside rolled leaves, control is difficult. For organic: spinosad or neem oil.",
+      "timing": "Scout fields for egg masses and small larvae before leaf rolling begins. Treat when 1-2 larvae per hill are found at vegetative stage, or when 25% of leaves show damage."
+    }
+  },
+  "rice leaf roller": {
+    "name": "Rice Leaf Roller",
+    "description": "Moth larvae that fold rice leaves lengthwise and feed inside, scraping green tissues and leaving white membranous streaks. Severe infestations cause extensive leaf damage, reducing photosynthetic area and affecting grain development. Can cause 10-60% yield loss.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Avoid excessive nitrogen application. Maintain proper plant spacing. Manually remove and destroy folded leaves in small fields. Use light traps to monitor and mass trap adult moths. Drain fields periodically.",
+      "biological": "Apply Bacillus thuringiensis (Bt) when larvae are young. Release Trichogramma chilonis for egg parasitism. Conserve natural enemies: spiders, lady beetles, and parasitic wasps. Use pheromone traps for monitoring and mating disruption.",
+      "chemical": "Spray cartap hydrochloride, chlorantraniliprole, or fipronil when larvae are in early instars. Apply before leaves are tightly rolled. For organic: azadirachtin (neem) or spinosad. Good spray coverage is essential.",
+      "timing": "Monitor fields for egg masses and young larvae. Use light traps to track moth populations. Treat when 1-2 fresh cases per hill are observed or 20% of leaves show damage."
+    }
+  },
+  "rice leafhopper": {
+    "name": "Rice Leafhopper (Green Leafhopper)",
+    "description": "Small green insects that suck sap from rice plants, causing yellowing ('hopper burn') and stunted growth. Primary concern is transmission of Tungro virus, one of the most serious rice diseases. Even low populations can spread disease effectively.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Plant Tungro-resistant varieties (most important control method). Practice synchronous planting. Remove infected plants immediately. Avoid ratooning in areas with Tungro. Use virus-free seeds and seedlings.",
+      "biological": "Conserve natural enemies including spiders, damsel bugs, and parasitic wasps. Avoid early prophylactic insecticide applications. Maintain flowering plants near fields to support beneficial insects.",
+      "chemical": "Apply systemic insecticides (imidacloprid, thiamethoxam) as nursery treatment or at transplanting to prevent early Tungro infection. Use buprofezin or pymetrozine for older plants. Focus on preventing disease rather than controlling established populations.",
+      "timing": "Monitor for leafhoppers from seedling stage. Check for Tungro symptoms (yellow-orange discoloration). Preventive treatments most critical in first 30 days after transplanting when Tungro risk is highest."
+    }
+  },
+  "rice shell pest": {
+    "name": "Rice Shell Pest (Rice Bug)",
+    "description": "Large bugs that feed on developing rice grains by piercing and sucking contents, causing empty or spotted grains ('pecky rice'). They emit foul odor when disturbed. Damage reduces grain quality, milling recovery, and market value. Most damaging during milky to dough stages.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Practice community-wide synchronous planting to break pest cycle. Remove weedy grasses around fields that serve as alternate hosts. Hand-collect bugs in small areas. Use light traps for monitoring and mass trapping.",
+      "biological": "Conserve egg parasitoids (Ooencyrtus species) and spiders. Encourage predatory bugs and birds. Use pheromone traps for monitoring. Avoid broad-spectrum insecticides that kill natural enemies.",
+      "chemical": "Apply insecticides only when population exceeds threshold (1-2 bugs per 5 hills at milk stage). Use malathion, lambda-cyhalothrin, or bifenthrin. Apply early morning or late evening when bugs are most active. For organic: neem oil or pyrethrin.",
+      "timing": "Scout fields from flowering through grain maturity. Shake plants over a tray to count bugs. Treat when threshold exceeded during vulnerable grain stages (milky to soft dough)."
+    }
+  },
+  "rice water weevil": {
+    "name": "Rice Water Weevil",
+    "description": "Small snout beetles whose adults feed on leaves (minor damage) while larvae feed on roots causing significant damage. Larval feeding on roots causes stunting, yellowing, and reduced tillering. Can cause 10-25% yield loss. Most widespread insect pest of rice in some regions.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Drain fields for 3-5 days during peak egg-laying period to desiccate eggs. Use later planting dates when feasible. Delay permanent flood until plants are well established. Remove volunteer rice and weedy grasses.",
+      "biological": "Conserve natural enemies: parasitic wasps (Anagrus), predatory beetles, and spiders. Use resistant rice varieties when available. Ducks can reduce weevil populations in some systems.",
+      "chemical": "Apply granular insecticides (chlorpyrifos, clothianidin) at early tillering or as foliar sprays (lambda-cyhalothrin) when adults first appear. For organic: azadirachtin seed treatment. Target adults before egg-laying or young larvae.",
+      "timing": "Monitor fields for adult weevils on leaves 2-4 weeks after flooding. Treat when 3-5 adults per plant are found, or apply at early tillering as preventive treatment in high-risk fields."
+    }
+  },
+  "sericaorient alismots chulsky": {
+    "name": "Oriental Beetle (Sericaorient Alis)",
+    "description": "Beetle whose larvae (white grubs) feed on grass and crop roots, causing irregular brown patches, wilting, and plant death. Adults feed on flowers and foliage. Damage turf, lawns, pastures, and various agricultural crops. Similar in habits to other white grubs.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Maintain healthy turf through proper watering, mowing, and fertilization. Use less attractive grass species in high-risk areas. Deep tillage in fall exposes grubs to predators. Reduce outdoor lighting that attracts adult beetles.",
+      "biological": "Apply beneficial nematodes (Heterorhabditis bacteriophora) when grubs are small. Use milky spore disease (Bacillus popilliae) for long-term control. Encourage birds, moles, and skunks that feed on grubs.",
+      "chemical": "Apply preventive treatments with imidacloprid, clothianidin, or thiamethoxam in early summer. Curative treatments: trichlorfon or carbaryl in late summer or fall. Water in thoroughly after application. For organic: neem oil.",
+      "timing": "Monitor adult activity in summer. Sample soil for grubs in August-September and April-May. Apply preventive treatments in June-July. Curative treatments when 8-10 grubs per square foot are found."
+    }
+  },
+  "small brown plant hopper": {
+    "name": "Small Brown Planthopper",
+    "description": "Small brown insects that suck sap from rice plants, causing 'hopper burn' similar to brown planthopper but generally less severe. They can vector rice diseases including rice stripe virus. Populations often build up late in the season.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Use resistant rice varieties. Avoid excessive nitrogen fertilization. Maintain 2-5 cm water depth in fields. Practice synchronous planting. Remove stubble and volunteer rice after harvest.",
+      "biological": "Conserve spiders, lady beetles, mirid bugs, and parasitoid wasps. Avoid early-season broad-spectrum insecticides. Maintain field borders with flowering plants to support natural enemies.",
+      "chemical": "Apply insecticides only when population exceeds threshold (varies by region, typically 10-20 per plant). Use buprofezin, pymetrozine, or dinotefuran. Avoid pyrethroids which may cause resurgence. Spot-treat hotspots first.",
+      "timing": "Monitor plants weekly using stem washing method. Check during tillering, booting, and flowering stages. Treat only when threshold exceeded and natural enemy populations are insufficient."
+    }
+  },
+  "tarnished plant bug": {
+    "name": "Tarnished Plant Bug",
+    "description": "Small mottled brown bugs with yellow triangle on back that pierce and inject toxic saliva into buds, flowers, and fruits. Feeding causes flower drop, fruit deformities, and stunted terminal growth. Highly polyphagous, attacking over 385 plant species including cotton, alfalfa, fruit, and vegetables.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Control weeds, especially flowering weeds, in and around fields before they attract bugs. Use row covers on vegetables. Plant early to avoid peak populations. Remove wild hosts near susceptible crops. Use trap crops.",
+      "biological": "Encourage predators: big-eyed bugs, damsel bugs, assassin bugs, lacewings, and parasitic wasps. Plant flowering borders to attract beneficials. Use pheromone traps for monitoring. Conserve natural enemies.",
+      "chemical": "Apply insecticides when threshold is exceeded (varies by crop: 5-8 per 100 sweeps in alfalfa, lower in cotton). Use flonicamid, acephate, or bifenthrin. For organic: pyrethrin or azadirachtin. Rotate insecticide classes.",
+      "timing": "Scout with sweep nets twice weekly from early growth stages through bloom. Treat at threshold, before extensive bud or fruit damage occurs. Reapply as needed per label and threshold."
+    }
+  },
+  "undefined": {
+    "name": "Unidentified Pest",
+    "description": "Pest detected but not identified to species level. May be a newly emerging pest, uncommon species, or detection with insufficient confidence. Requires closer inspection and proper identification before implementing control measures.",
+    "category": "Pest - Unknown",
+    "control_methods": {
+      "cultural": "Collect specimens and photograph for proper identification. Contact local extension service or agricultural expert. Observe pest behavior, host plants, and damage patterns. Document location and conditions.",
+      "biological": "Delay treatment until proper identification. Conserve natural enemies as they may provide control. Monitor population trends and damage levels.",
+      "chemical": "Do not apply pesticides until pest is properly identified. Misidentification can lead to ineffective control, wasted resources, and environmental damage. Consult with certified pest management professionals.",
+      "timing": "Monitor closely for population development and damage patterns. Seek expert identification promptly to determine appropriate control strategies."
+    }
+  },
+  "wheat phloeothrips": {
+    "name": "Wheat Thrips (Phloeothrips)",
+    "description": "Tiny slender insects that feed on wheat heads, rasping grain surfaces and sucking sap. Feeding causes silvering, shriveling, and reduced grain quality. Heavy infestations reduce test weight, grain size, and overall yield. Most damaging during grain fill.",
+    "category": "Pest - Thysanoptera",
+    "control_methods": {
+      "cultural": "Plant early-maturing varieties to escape peak thrips populations. Use resistant or tolerant varieties. Maintain good crop nutrition. Remove volunteer wheat and grassy weeds that harbor thrips.",
+      "biological": "Conserve predatory thrips, minute pirate bugs, lacewings, and predatory mites. Use blue sticky traps for monitoring. Avoid broad-spectrum insecticides that harm beneficial insects.",
+      "chemical": "Apply insecticides when economic threshold is exceeded (15-25 thrips per head during grain fill). Use dimethoate, lambda-cyhalothrin, or spinosad. Add surfactant for better coverage. For organic: spinosad or insecticidal soap.",
+      "timing": "Scout from heading through soft dough stage. Shake heads over white paper or use sweep nets. Count thrips and assess damage. Treat if threshold exceeded during vulnerable grain stages."
+    }
+  },
+  "wheat sawfly": {
+    "name": "Wheat Sawfly",
+    "description": "Wasp-like insects whose larvae tunnel inside wheat stems, weakening them and causing lodging. Larvae cut stems near soil surface before pupating, causing plants to fall ('lodging'). Fallen stems are difficult to harvest, resulting in significant grain loss. Damaging in many wheat-growing regions.",
+    "category": "Pest - Hymenoptera",
+    "control_methods": {
+      "cultural": "Plant solid-stemmed wheat varieties (most effective control). Use wheat varieties with solid or semi-solid stems. Adjust seeding rates for denser stands. Avoid early planting which favors sawfly survival. Stubble management can help reduce populations.",
+      "biological": "Conserve parasitic wasps (Bracon species) that attack sawfly larvae. Encourage ground-nesting predators. Avoid unnecessary insecticide applications that harm natural enemies.",
+      "chemical": "Chemical control generally not economical or effective once larvae are inside stems. In severe situations, apply insecticides targeting adults during egg-laying period. Use pyrethroid sprays if economic threshold exceeded. Limited effectiveness.",
+      "timing": "Monitor for adult sawflies during stem elongation. Assess infestation levels by splitting stems in late season. Primary control is using solid-stemmed varieties rather than insecticides."
+    }
+  },
+  "white backed plant hopper": {
+    "name": "White-Backed Planthopper",
+    "description": "Planthopper with distinctive white band on back that sucks sap from rice plants. Causes 'hopper burn' and transmits serious viral diseases including Orange Leaf and Tungro. Can build very high populations and cause severe damage. Highly migratory pest.",
+    "category": "Pest - Hemiptera",
+    "control_methods": {
+      "cultural": "Plant resistant rice varieties with genes for both hopper and virus resistance. Practice community-wide synchronous planting. Remove alternate hosts and weedy grasses. Avoid excessive nitrogen. Remove and destroy infected plants.",
+      "biological": "Conserve natural enemies: spiders, mirid bugs, lady beetles, and egg parasitoids. Establish refugia with flowering plants. Avoid prophylactic insecticide applications that kill beneficial insects.",
+      "chemical": "Apply insecticides only when population exceeds economic threshold (10-15 per plant). Use buprofezin, pymetrozine, or dinotefuran. Avoid broad-spectrum pyrethroids. Spot-treat initial infestations. Rotate insecticide modes of action.",
+      "timing": "Monitor plants weekly from tillering through flowering. Use stem immersion method or visual counts. Treat when threshold exceeded, especially during critical crop stages (tillering, booting)."
+    }
+  },
+  "white margined moth": {
+    "name": "White-Margined Moth (Armyworm)",
+    "description": "Moth larvae that feed on various crops and grasses. Caterpillars have distinctive white margins or stripes and can defoliate plants rapidly when present in large numbers. They feed primarily at night and may move in groups to new food sources.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Control weedy grasses and remove crop residues. Plow fields after harvest to destroy pupae. Use pheromone traps to monitor moth flights. Maintain field sanitation and remove volunteer plants.",
+      "biological": "Apply Bacillus thuringiensis (Bt) for organic control. Encourage natural enemies: parasitic wasps, tachinid flies, ground beetles, and birds. Use nuclear polyhedrosis virus (NPV) if available for this species.",
+      "chemical": "Apply insecticides when larvae are young (1st-3rd instar). Use spinosad (organic), chlorantraniliprole, indoxacarb, or lambda-cyhalothrin. Apply in late afternoon or evening when larvae become active. Ensure good coverage.",
+      "timing": "Scout fields regularly for egg masses and young larvae. Use pheromone traps to predict larval presence. Treat when 3-5 larvae per plant are found or when feeding damage becomes noticeable."
+    }
+  },
+  "wireworm": {
+    "name": "Wireworm (Click Beetle Larvae)",
+    "description": "Hard-bodied, wire-like beetle larvae that live in soil for 2-6 years, feeding on seeds, roots, and underground plant parts. They bore into tubers, kill seedlings, and stunt plant growth. Particularly damaging to potatoes, corn, wheat, vegetables, and newly planted crops.",
+    "category": "Pest - Coleoptera",
+    "control_methods": {
+      "cultural": "Plow fields in fall to expose wireworms to predators and cold. Rotate away from grass sods and cover crops which favor wireworms. Delay planting in high-risk fields. Use bait traps (germinating corn/wheat) to monitor populations. Remove volunteer plants.",
+      "biological": "Use entomopathogenic nematodes (Steinernema, Heterorhabditis) applied to soil. Encourage ground beetles and insectivorous birds. Fungal pathogens (Metarhizium) can provide some control. Bait stations with nematodes.",
+      "chemical": "Apply seed treatments with thiamethoxam, clothianidin, or imidacloprid for protection. In-furrow insecticides (chlorpyrifos, bifenthrin) at planting. For organic: use neem cake in soil or neem oil treatments. Preventive treatments most effective.",
+      "timing": "Sample soil before planting using bait traps (1 per acre). If more than 1 wireworm per trap, consider treatment. Apply treatments at or before planting for best protection."
+    }
+  },
+  "yellow cutworm": {
+    "name": "Yellow Cutworm",
+    "description": "Nocturnal caterpillars, pale yellow to brown, that cut seedlings at soil surface causing plant death. Hide in soil or under debris during day. Can cut multiple plants per night, causing severe stand losses in row crops, vegetables, and transplants. Active in spring and fall.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Control weeds 2-3 weeks before planting; moths lay eggs in weedy fields. Create weed-free buffer zones. Use plant collars (cardboard rings) around transplants. Cultivate soil to expose cutworms. Remove debris where they hide.",
+      "biological": "Apply Bacillus thuringiensis (Bt) to soil surface and plant bases. Use entomopathogenic nematodes in soil. Encourage ground beetles, parasitic wasps, tachinid flies, and birds. Pheromone traps for monitoring.",
+      "chemical": "Spray soil surface and plant bases at dusk with chlorpyrifos, bifenthrin, or lambda-cyhalothrin. Apply when cutting begins. Bait formulations can be effective. For organic: spinosad or pyrethrin. Repeat if needed.",
+      "timing": "Check fields early morning for cut plants. Dig around plant bases to find larvae. Treat when 2-5% of plants are cut or 1 cutworm per 3-4 plants found."
+    }
+  },
+  "yellow rice borer": {
+    "name": "Yellow Rice Borer (Rice Yellow Stem Borer)",
+    "description": "Moth larvae that bore into rice stems, causing 'deadheart' in vegetative stage and 'whitehead' in reproductive stage. Larvae tunnel in stems, cutting off nutrient supply and killing tillers or preventing grain fill. One of the most damaging rice pests in Asia.",
+    "category": "Pest - Lepidoptera",
+    "control_methods": {
+      "cultural": "Use resistant rice varieties with stem borer resistance genes. Practice clean cultivation: remove stubble, cut low, and plow deeply. Raise seedlings in plots far from infested fields. Synchronize planting dates. Remove weeds that serve as hosts.",
+      "biological": "Release Trichogramma egg parasitoids at weekly intervals (5-8 releases). Apply Bacillus thuringiensis (Bt). Conserve spiders, lady beetles, and parasitic wasps. Use light traps to monitor and mass-trap moths.",
+      "chemical": "Apply granular insecticides (cartap, chlorantraniliprole, fipronil) in leaf axils during early tillering and booting. Foliar sprays less effective once larvae bore into stems. For organic: neem-based products or Bt before boring.",
+      "timing": "Monitor for egg masses on leaf tips. Use light traps to track moth activity. Treat at early larval stage before boring: 7-10 days after peak moth catch, during active tillering and before panicle initiation."
+    }
   }
 }
