@@ -123,6 +123,52 @@ pest-detection/
 └── README.md                    # This file
 ```
 
+## 🗄️ System Architecture
+
+### Entity Relationship Diagram
+
+The system follows this data architecture for pest detection and information management:
+
+```mermaid
+erDiagram
+    ESP32_CAM ||--o{ RASPBERRY_PI : "Streams Video"
+    RASPBERRY_PI ||--o{ DETECTION_RESULT : "Processes/Detects"
+    DETECTION_RESULT }o--|| PEST : "identified as"
+    PEST ||--|{ PEST_INFORMATION : "has"
+    WEB_APPLICATION ||--o{ DETECTION_RESULT : "Displays"
+    WEB_APPLICATION ||--o{ PEST : "Shows Definition"
+    WEB_APPLICATION ||--o{ PEST_INFORMATION : "Shows Control Tips"
+
+    DETECTION_RESULT {
+        int detection_id PK
+        datetime timestamp
+        string pest_id FK
+        float confidence
+        string image_path
+        string bbox_coordinates
+    }
+    PEST {
+        string pest_id PK
+        string common_name
+        string scientific_name
+        string description
+    }
+    PEST_INFORMATION {
+        int control_id PK
+        string pest_id FK
+        string method
+    }
+```
+
+### Architecture Overview
+
+- **ESP32_CAM**: Captures video feed for pest detection
+- **RASPBERRY_PI**: Processes video and runs YOLOv8 detection model
+- **DETECTION_RESULT**: Stores individual pest detections with confidence scores and bounding boxes
+- **PEST**: Database of pest species with common/scientific names and descriptions
+- **PEST_INFORMATION**: Control methods and management tips for each pest species
+- **WEB_APPLICATION**: Displays real-time detections and pest information to users
+
 ## 🎨 Web Interface Features
 
 - **Modern Design**: Clean, professional interface with gradient backgrounds
