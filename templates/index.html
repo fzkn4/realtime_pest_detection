@@ -260,6 +260,294 @@
         transform: translateY(-2px);
       }
 
+      .trap-status-card {
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        border: 2px solid #e9ecef;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .trap-status-indicator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+      }
+
+      .trap-icon-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .trap-progress-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .trap-progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .trap-progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .trap-progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        animation: shimmer 2s infinite;
+      }
+
+      .trap-percentage {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #6c757d;
+      }
+
+      .trap-details {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .trap-level {
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+
+      .trap-description {
+        font-size: 0.8rem;
+        color: #6c757d;
+        font-style: italic;
+      }
+
+      /* Status-specific styles */
+      .trap-status-card.low {
+        border-color: #28a745;
+      }
+
+      .trap-status-card.low .trap-progress-fill {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        width: 25%;
+      }
+
+      .trap-status-card.low .trap-level {
+        color: #28a745;
+      }
+
+      .trap-status-card.medium {
+        border-color: #ffc107;
+      }
+
+      .trap-status-card.medium .trap-progress-fill {
+        background: linear-gradient(135deg, #ffc107, #fd7e14);
+        width: 65%;
+      }
+
+      .trap-status-card.medium .trap-level {
+        color: #ffc107;
+      }
+
+      .trap-status-card.full {
+        border-color: #dc3545;
+        animation: alertPulse 2s ease-in-out infinite;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+      }
+
+      .trap-status-card.full .trap-progress-fill {
+        background: linear-gradient(135deg, #dc3545, #e83e8c);
+        width: 95%;
+      }
+
+      .trap-status-card.full .trap-level {
+        color: #dc3545;
+      }
+
+      /* Animations */
+      @keyframes gentlePulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      @keyframes urgentPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      @keyframes alertPulse {
+        0%,
+        100% {
+          box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          box-shadow: 0 4px 25px rgba(220, 53, 69, 0.4);
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes shimmer {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      .trap-controls {
+        display: flex;
+        gap: 6px;
+        margin-left: 15px;
+        align-items: center;
+      }
+
+      .trap-btn {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        position: relative;
+        overflow: hidden;
+        min-width: 60px;
+      }
+
+      .trap-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .trap-btn:hover::before {
+        left: 100%;
+      }
+
+      .trap-btn.low {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+      }
+
+      .trap-btn.medium {
+        background: linear-gradient(135deg, #ffc107, #fd7e14);
+        color: #212529;
+        box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+      }
+
+      .trap-btn.full {
+        background: linear-gradient(135deg, #dc3545, #e83e8c);
+        color: white;
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+      }
+
+      .trap-btn:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .trap-btn:active {
+        transform: translateY(0) scale(0.98);
+        transition: all 0.1s ease;
+      }
+
+      .trap-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Tooltip styles */
+      .trap-status-card[data-tooltip] {
+        position: relative;
+        cursor: help;
+      }
+
+      /* Responsive design for trap status */
+      @media (max-width: 768px) {
+        .trap-controls {
+          margin-left: 0;
+          margin-top: 10px;
+          justify-content: center;
+        }
+
+        .trap-btn {
+          padding: 6px 10px;
+          font-size: 0.7rem;
+          min-width: 50px;
+        }
+
+        .trap-progress-bar {
+          height: 6px;
+        }
+
+        .trap-level {
+          font-size: 0.9rem;
+        }
+
+        .trap-description {
+          font-size: 0.75rem;
+        }
+      }
+
       .stat-value {
         font-size: 1.8rem;
         font-weight: 700;
@@ -1075,6 +1363,26 @@
               <button id="toggleChartBtn" class="chart-toggle-btn">
                 <span id="chartToggleText">Hide Chart</span>
               </button>
+              <div class="trap-controls">
+                <button
+                  onclick="updateTrapStatusManually('low')"
+                  class="trap-btn low"
+                >
+                  Low
+                </button>
+                <button
+                  onclick="updateTrapStatusManually('medium')"
+                  class="trap-btn medium"
+                >
+                  Medium
+                </button>
+                <button
+                  onclick="updateTrapStatusManually('full')"
+                  class="trap-btn full"
+                >
+                  Full
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1103,6 +1411,27 @@
             <div class="stat-card">
               <div class="stat-value" id="mostCommonStat">-</div>
               <div class="stat-label">Most Common</div>
+            </div>
+            <div
+              class="stat-card trap-status-card"
+              data-tooltip="Click to view trap details"
+            >
+              <div class="trap-status-indicator" id="trapStatusIndicator">
+                <div class="trap-icon-container"></div>
+                <div class="trap-progress-container">
+                  <div class="trap-progress-bar">
+                    <div class="trap-progress-fill" id="trapProgressFill"></div>
+                  </div>
+                  <div class="trap-percentage" id="trapPercentage">25%</div>
+                </div>
+                <div class="trap-details">
+                  <div class="trap-level" id="trapLevel">Low</div>
+                  <div class="trap-description" id="trapDescription">
+                    Trap is functioning normally
+                  </div>
+                </div>
+              </div>
+              <div class="stat-label">Trap Status</div>
             </div>
           </div>
         </div>
@@ -1740,6 +2069,9 @@
       // Initialize chart on page load
       updateChart();
 
+      // Initialize trap status on page load
+      updateTrapStatus();
+
       // Add detection status display
       function updateDetectionStatus() {
         fetch("/get_detection_status")
@@ -1774,6 +2106,141 @@
 
       // Update detection status every second
       setInterval(updateDetectionStatus, 1000);
+
+      // Update trap status every 5 seconds
+      setInterval(updateTrapStatus, 5000);
+
+      function updateTrapStatus() {
+        fetch("/get_trap_status")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              const trapStatus = data.trap_status;
+              const trapCard = document.querySelector(".trap-status-card");
+              const trapLevelElement = document.getElementById("trapLevel");
+              const trapProgressFill =
+                document.getElementById("trapProgressFill");
+              const trapPercentage = document.getElementById("trapPercentage");
+              const trapDescription =
+                document.getElementById("trapDescription");
+
+              // Debug logging
+              console.log("Updating trap status to:", trapStatus.status);
+              console.log("Trap card element:", trapCard);
+
+              // Ensure all elements exist
+              if (
+                !trapCard ||
+                !trapLevelElement ||
+                !trapProgressFill ||
+                !trapPercentage ||
+                !trapDescription
+              ) {
+                console.error("One or more trap status elements not found");
+                return;
+              }
+
+              // Update card class for styling - remove any existing status classes first
+              trapCard.className = trapCard.className.replace(
+                /\s+(low|medium|full)/g,
+                ""
+              );
+              trapCard.className += ` ${trapStatus.status}`;
+
+              // Update progress bar
+              trapProgressFill.style.width = `${trapStatus.percentage}%`;
+
+              // Update percentage display
+              trapPercentage.textContent = `${trapStatus.percentage}%`;
+
+              // Update level text
+              trapLevelElement.textContent =
+                trapStatus.status.charAt(0).toUpperCase() +
+                trapStatus.status.slice(1);
+
+              // Update description based on status
+              let description = "";
+
+              switch (trapStatus.status) {
+                case "low":
+                  description = "Trap is functioning normally";
+                  break;
+                case "medium":
+                  description = "Trap is getting full - monitor closely";
+                  break;
+                case "full":
+                  description = "Trap is full - needs immediate attention!";
+                  break;
+              }
+
+              trapDescription.textContent = description;
+
+              console.log(
+                "Trap status updated successfully to:",
+                trapStatus.status
+              );
+            }
+          })
+          .catch((error) =>
+            console.error("Error fetching trap status:", error)
+          );
+      }
+
+      function updateTrapStatusManually(level) {
+        // Add visual feedback
+        const button = event.target;
+        const originalText = button.textContent;
+
+        // Disable button temporarily
+        button.disabled = true;
+        button.textContent = "Updating...";
+
+        fetch(`/update_trap_status/${level}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              console.log(`Trap status updated to: ${level}`);
+
+              // Show success feedback
+              button.textContent = "✓ Updated";
+              button.style.background =
+                "linear-gradient(135deg, #28a745, #20c997)";
+
+              // Immediately update the display
+              updateTrapStatus();
+
+              // Reset button after delay
+              setTimeout(() => {
+                button.disabled = false;
+                button.textContent = originalText;
+                button.style.background = "";
+              }, 1500);
+            } else {
+              console.error("Failed to update trap status:", data.message);
+              button.textContent = "✗ Error";
+              button.style.background =
+                "linear-gradient(135deg, #dc3545, #e83e8c)";
+
+              setTimeout(() => {
+                button.disabled = false;
+                button.textContent = originalText;
+                button.style.background = "";
+              }, 1500);
+            }
+          })
+          .catch((error) => {
+            console.error("Error updating trap status:", error);
+            button.textContent = "✗ Error";
+            button.style.background =
+              "linear-gradient(135deg, #dc3545, #e83e8c)";
+
+            setTimeout(() => {
+              button.disabled = false;
+              button.textContent = originalText;
+              button.style.background = "";
+            }, 1500);
+          });
+      }
     </script>
   </body>
 </html>
