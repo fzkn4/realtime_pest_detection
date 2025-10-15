@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pest Detection System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       * {
         margin: 0;
@@ -85,6 +86,288 @@
         margin-top: 20px;
       }
 
+      .chart-section {
+        grid-column: 1 / -1;
+        background: linear-gradient(135deg, #f8f9fa, #e8f5e8);
+        border-radius: 12px;
+        padding: 25px;
+        margin-top: 20px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      .chart-title {
+        color: #2e7d32;
+        font-size: 1.4rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .chart-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .chart-toggle-btn {
+        background: linear-gradient(135deg, #4caf50, #2e7d32);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: "TT Interphases", sans-serif;
+      }
+
+      .chart-toggle-btn:hover {
+        background: linear-gradient(135deg, #45a049, #1b5e20);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+      }
+
+      .chart-container {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 30px;
+        align-items: start;
+      }
+
+      .chart-wrapper {
+        position: relative;
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .chart-legend {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .chart-legend::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .chart-legend::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .chart-legend::-webkit-scrollbar-thumb {
+        background: #4caf50;
+        border-radius: 10px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.2s ease;
+      }
+
+      .legend-item:last-child {
+        border-bottom: none;
+      }
+
+      .legend-item:hover {
+        background: #f8f9fa;
+        border-radius: 6px;
+        padding: 8px 6px;
+        margin: 0 -6px;
+      }
+
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .legend-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .legend-name {
+        font-weight: 600;
+        color: #2e7d32;
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+      }
+
+      .legend-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      .legend-count {
+        background: #e8f5e8;
+        color: #2e7d32;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.75rem;
+      }
+
+      .chart-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2e7d32;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: #666;
+        font-weight: 500;
+      }
+
+      .no-data-chart {
+        text-align: center;
+        color: #999;
+        padding: 40px;
+      }
+
+      .no-data-chart-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.4;
+      }
+
+      .chart-hidden {
+        display: none;
+      }
+
+      .chart-container {
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .chart-container:not(.chart-hidden) {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .stat-card {
+        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .stat-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .stat-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .stat-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .stat-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .legend-item {
+        animation: slideInRight 0.4s ease forwards;
+        opacity: 0;
+        transform: translateX(20px);
+      }
+
+      .legend-item:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .legend-item:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .legend-item:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .legend-item:nth-child(4) {
+        animation-delay: 0.25s;
+      }
+      .legend-item:nth-child(5) {
+        animation-delay: 0.3s;
+      }
+
+      @keyframes slideInRight {
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .chart-section {
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
       .video-section {
         min-width: 0;
       }
@@ -120,13 +403,26 @@
         margin-bottom: 10px;
       }
 
+      .detection-counts {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
       .detection-count {
-        background: #2e7d32;
         color: white;
         padding: 4px 12px;
         border-radius: 16px;
         font-size: 0.9rem;
         font-weight: 600;
+      }
+
+      .unique-count {
+        background: #2e7d32;
+      }
+
+      .total-count {
+        background: #ff9800;
       }
 
       .clear-detections-btn {
@@ -205,15 +501,6 @@
         width: 6px;
       }
 
-      .detection-item.inactive {
-        opacity: 0.6;
-        border-color: #e0e0e0;
-      }
-
-      .detection-item.inactive::before {
-        background: linear-gradient(180deg, #bdbdbd, #9e9e9e);
-      }
-
       @keyframes slideInFade {
         from {
           opacity: 0;
@@ -241,23 +528,6 @@
         align-items: center;
         gap: 8px;
         flex: 1;
-      }
-
-      .status-indicator {
-        font-size: 0.7rem;
-        animation: pulse 2s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 0.7;
-          transform: scale(1.1);
-        }
       }
 
       .detection-name {
@@ -474,6 +744,14 @@
         border-left: 4px solid #f44336;
       }
 
+      .status-tracking {
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        color: white;
+        font-size: 0.9rem;
+        border: 1px solid #4ecdc4;
+        border-left: 4px solid #4ecdc4;
+      }
+
       .video-container {
         position: relative;
         width: 100%;
@@ -655,6 +933,15 @@
         .description-panel {
           max-height: 500px;
         }
+
+        .chart-container {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .chart-legend {
+          max-height: 300px;
+        }
       }
 
       @media (max-width: 768px) {
@@ -746,7 +1033,20 @@
             <div class="panel-header">
               <h3>
                 <span>Detected Pests</span>
-                <span id="detectionCount" class="detection-count">0</span>
+                <div class="detection-counts">
+                  <span
+                    class="detection-count unique-count"
+                    title="Unique pest types"
+                  >
+                    Types: <span id="uniqueCount">0</span>
+                  </span>
+                  <span
+                    class="detection-count total-count"
+                    title="Total detections"
+                  >
+                    Total: <span id="totalCount">0</span>
+                  </span>
+                </div>
               </h3>
               <button
                 id="clearBtn"
@@ -764,14 +1064,63 @@
             </div>
           </div>
         </div>
+
+        <!-- Chart Section -->
+        <div class="chart-section" id="chartSection">
+          <div class="chart-header">
+            <h3 class="chart-title">
+              <span>Pest Detection Summary</span>
+            </h3>
+            <div class="chart-controls">
+              <button id="toggleChartBtn" class="chart-toggle-btn">
+                <span id="chartToggleText">Hide Chart</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="chart-container" id="chartContainer">
+            <div class="chart-wrapper">
+              <canvas id="pestChart" width="400" height="400"></canvas>
+            </div>
+
+            <div class="chart-legend" id="chartLegend">
+              <div class="no-data-chart">
+                <div class="no-data-chart-icon"></div>
+                <p>No detection data available yet</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-stats" id="chartStats">
+            <div class="stat-card">
+              <div class="stat-value" id="totalDetectionsStat">0</div>
+              <div class="stat-label">Total Detections</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="uniquePestsStat">0</div>
+              <div class="stat-label">Unique Pests</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="mostCommonStat">-</div>
+              <div class="stat-label">Most Common</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <script>
       let isDetecting = false;
       let detectionInterval = null;
-      let persistentDetections = {}; // Store all detected objects
+      let persistentDetections = {}; // Store unique pest information
       let expandedPests = new Set(); // Track which pests have expanded details
+      let totalDetectionCount = 0; // Track total detection count
+      let pestChart = null; // Chart.js instance
+      let chartVisible = true; // Chart visibility state - show by default
+      let lastChartUpdate = 0; // Track last chart update time
+      let chartUpdateInterval = 5000; // Update chart every 5 seconds
+      let lastDisplayUpdate = 0; // Track last display update time
+      let displayUpdateInterval = 1000; // Update display every 1 second
 
       const startBtn = document.getElementById("startBtn");
       const stopBtn = document.getElementById("stopBtn");
@@ -782,17 +1131,273 @@
       const detectionsContainer = document.getElementById(
         "detectionsContainer"
       );
-      const detectionCount = document.getElementById("detectionCount");
+      const uniqueCount = document.getElementById("uniqueCount");
+      const totalCount = document.getElementById("totalCount");
       const clearBtn = document.getElementById("clearBtn");
+      const toggleChartBtn = document.getElementById("toggleChartBtn");
+      const chartToggleText = document.getElementById("chartToggleText");
+      const chartContainer = document.getElementById("chartContainer");
+      const chartLegend = document.getElementById("chartLegend");
+      const chartStats = document.getElementById("chartStats");
 
       startBtn.addEventListener("click", startDetection);
       stopBtn.addEventListener("click", stopDetection);
       clearBtn.addEventListener("click", clearDetections);
+      toggleChartBtn.addEventListener("click", toggleChart);
 
-      function clearDetections() {
+      async function clearDetections() {
         persistentDetections = {};
         expandedPests.clear();
+        totalDetectionCount = 0;
+
+        // Reset counting on server side
+        try {
+          await fetch("/reset_counting");
+        } catch (error) {
+          console.error("Error resetting counting:", error);
+        }
+
         updateDetectionsDisplay([]);
+        lastChartUpdate = 0; // Reset chart update timer
+        lastDisplayUpdate = 0; // Reset display update timer
+        updateChart();
+      }
+
+      function toggleChart() {
+        chartVisible = !chartVisible;
+
+        if (chartVisible) {
+          chartContainer.classList.remove("chart-hidden");
+          chartToggleText.textContent = "Hide Chart";
+          updateChart();
+        } else {
+          chartContainer.classList.add("chart-hidden");
+          chartToggleText.textContent = "Show Chart";
+        }
+      }
+
+      async function updateChart() {
+        if (!chartVisible) return;
+
+        try {
+          const response = await fetch("/get_pest_summary");
+          const result = await response.json();
+
+          if (result.status === "success") {
+            updateChartData(result);
+          }
+        } catch (error) {
+          console.error("Error fetching chart data:", error);
+        }
+      }
+
+      function updateChartData(data) {
+        // Update stats
+        document.getElementById("totalDetectionsStat").textContent =
+          data.total_detections;
+        document.getElementById("uniquePestsStat").textContent =
+          data.unique_pests;
+
+        const mostCommon =
+          data.chart_data.length > 0 ? data.chart_data[0].label : "-";
+        document.getElementById("mostCommonStat").textContent = mostCommon;
+
+        // Update chart only if data exists and chart doesn't exist yet
+        if (data.chart_data.length === 0) {
+          if (pestChart) {
+            showNoDataChart();
+          }
+          return;
+        }
+
+        // Only create chart if it doesn't exist, otherwise just update data
+        if (!pestChart) {
+          createPieChart(data.chart_data);
+          updateChartLegend(data.chart_data);
+        } else {
+          updateChartDataOnly(data.chart_data);
+          updateChartLegendData(data.chart_data);
+        }
+      }
+
+      function createPieChart(chartData) {
+        const ctx = document.getElementById("pestChart").getContext("2d");
+
+        // Destroy existing chart if it exists
+        if (pestChart) {
+          pestChart.destroy();
+        }
+
+        pestChart = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: chartData.map((item) => item.label),
+            datasets: [
+              {
+                data: chartData.map((item) => item.value),
+                backgroundColor: chartData.map((item) => item.color),
+                borderColor: "#ffffff",
+                borderWidth: 3,
+                hoverBorderWidth: 4,
+                hoverBorderColor: "#2e7d32",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false, // We'll use custom legend
+              },
+              tooltip: {
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                titleColor: "#ffffff",
+                bodyColor: "#ffffff",
+                borderColor: "#4caf50",
+                borderWidth: 1,
+                cornerRadius: 8,
+                displayColors: true,
+                callbacks: {
+                  label: function (context) {
+                    const item = chartData[context.dataIndex];
+                    const percentage = (
+                      (item.value /
+                        chartData.reduce((sum, d) => sum + d.value, 0)) *
+                      100
+                    ).toFixed(1);
+                    return `${item.label}: ${item.value} detections (${percentage}%)`;
+                  },
+                },
+              },
+            },
+            cutout: "60%",
+            animation: {
+              animateRotate: false,
+              animateScale: false,
+              duration: 0,
+            },
+            interaction: {
+              intersect: false,
+              mode: "index",
+            },
+          },
+        });
+      }
+
+      function updateChartDataOnly(chartData) {
+        // Update existing chart data without recreating it
+        pestChart.data.labels = chartData.map((item) => item.label);
+        pestChart.data.datasets[0].data = chartData.map((item) => item.value);
+        pestChart.data.datasets[0].backgroundColor = chartData.map(
+          (item) => item.color
+        );
+        pestChart.update("none"); // Update without animation to prevent flashing
+      }
+
+      function updateChartLegendData(chartData) {
+        // Update legend data without recreating the entire legend
+        const total = chartData.reduce((sum, item) => sum + item.value, 0);
+
+        // Update existing legend items or create new ones
+        const legendContainer = chartLegend;
+        const existingItems = legendContainer.querySelectorAll(".legend-item");
+
+        chartData.forEach((item, index) => {
+          const percentage = ((item.value / total) * 100).toFixed(1);
+
+          if (existingItems[index]) {
+            // Update existing item
+            const existingItem = existingItems[index];
+            const colorElement = existingItem.querySelector(".legend-color");
+            const nameElement = existingItem.querySelector(".legend-name");
+            const countElement = existingItem.querySelector(".legend-count");
+
+            if (colorElement) colorElement.style.backgroundColor = item.color;
+            if (nameElement) nameElement.textContent = item.label;
+            if (countElement) countElement.textContent = item.value;
+          } else {
+            // Create new item if needed
+            const newItem = document.createElement("div");
+            newItem.className = "legend-item";
+            newItem.innerHTML = `
+              <div class="legend-color" style="background-color: ${item.color}"></div>
+              <div class="legend-info">
+                <div class="legend-name">${item.label}</div>
+                <div class="legend-details">
+                  <span>${item.category}</span>
+                  <span class="legend-count">${item.value}</span>
+                </div>
+              </div>
+            `;
+            legendContainer.appendChild(newItem);
+          }
+        });
+
+        // Remove excess items if data has fewer items than before
+        while (existingItems.length > chartData.length) {
+          existingItems[existingItems.length - 1].remove();
+        }
+      }
+
+      function updateChartLegend(chartData) {
+        if (chartData.length === 0) {
+          chartLegend.innerHTML = `
+            <div class="no-data-chart">
+              <div class="no-data-chart-icon">📊</div>
+              <p>No detection data available yet</p>
+            </div>
+          `;
+          return;
+        }
+
+        const total = chartData.reduce((sum, item) => sum + item.value, 0);
+
+        let legendHtml = "";
+        chartData.forEach((item) => {
+          const percentage = ((item.value / total) * 100).toFixed(1);
+          legendHtml += `
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: ${item.color}"></div>
+              <div class="legend-info">
+                <div class="legend-name">${item.label}</div>
+                <div class="legend-details">
+                  <span>${item.category}</span>
+                  <span class="legend-count">${item.value}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        chartLegend.innerHTML = legendHtml;
+      }
+
+      function showNoDataChart() {
+        const ctx = document.getElementById("pestChart").getContext("2d");
+
+        if (pestChart) {
+          pestChart.destroy();
+          pestChart = null;
+        }
+
+        // Clear the canvas
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // Draw a simple "no data" message
+        ctx.fillStyle = "#999";
+        ctx.font = '16px "TT Interphases", sans-serif';
+        ctx.textAlign = "center";
+        ctx.fillText(
+          "No detection data",
+          ctx.canvas.width / 2,
+          ctx.canvas.height / 2 - 10
+        );
+        ctx.fillText(
+          "Start detection to see chart",
+          ctx.canvas.width / 2,
+          ctx.canvas.height / 2 + 10
+        );
       }
 
       async function startDetection() {
@@ -823,6 +1428,9 @@
             // Reset persistent detections and expanded states for new session
             persistentDetections = {};
             expandedPests.clear();
+            totalDetectionCount = 0;
+            lastChartUpdate = 0; // Reset chart update timer
+            lastDisplayUpdate = 0; // Reset display update timer
 
             // Start polling for detections
             startDetectionPolling();
@@ -859,7 +1467,9 @@
             // Reset persistent detections and expanded states
             persistentDetections = {};
             expandedPests.clear();
-            detectionCount.textContent = "0";
+            totalDetectionCount = 0;
+            uniqueCount.textContent = "0";
+            totalCount.textContent = "0";
             clearBtn.style.display = "none";
 
             // Reset detections display
@@ -869,6 +1479,16 @@
                 <p>Start detection to see real-time object information</p>
               </div>
             `;
+
+            // Reset chart stats
+            document.getElementById("totalDetectionsStat").textContent = "0";
+            document.getElementById("uniquePestsStat").textContent = "0";
+            document.getElementById("mostCommonStat").textContent = "-";
+
+            // Reset chart if visible
+            if (chartVisible) {
+              updateChart();
+            }
           } else {
             throw new Error(result.message);
           }
@@ -880,8 +1500,8 @@
       }
 
       function startDetectionPolling() {
-        // Poll for detections every 500ms
-        detectionInterval = setInterval(fetchDetections, 500);
+        // Poll for detections every 2 seconds to reduce flickering
+        detectionInterval = setInterval(fetchDetections, 2000);
       }
 
       function stopDetectionPolling() {
@@ -897,7 +1517,18 @@
           const result = await response.json();
 
           if (result.status === "success") {
+            // Update total detection count from server
+            if (result.counting_stats) {
+              totalDetectionCount = result.counting_stats.total_detections;
+            }
             updateDetectionsDisplay(result.detections);
+
+            // Throttle chart updates to prevent flashing
+            const now = Date.now();
+            if (now - lastChartUpdate > chartUpdateInterval) {
+              updateChart();
+              lastChartUpdate = now;
+            }
           }
         } catch (error) {
           console.error("Error fetching detections:", error);
@@ -905,51 +1536,54 @@
       }
 
       function updateDetectionsDisplay(detections) {
-        // Add new detections to persistent storage
+        // Add new detections to persistent storage (only unique pest types)
         const newDetections = [];
+        let hasNewDetections = false;
 
         detections.forEach((detection) => {
           const className = detection.class;
 
           if (!persistentDetections[className]) {
-            // New detection - add it
+            // New unique pest type - add it
             persistentDetections[className] = {
               ...detection,
-              currentlyVisible: true,
               firstSeen: Date.now(),
               lastSeen: Date.now(),
             };
             newDetections.push(className);
+            hasNewDetections = true;
           } else {
-            // Update existing detection
-            persistentDetections[className].currentlyVisible = true;
-            persistentDetections[className].lastSeen = Date.now();
-            // Update confidence if higher
+            // Only update if confidence is significantly higher (to prevent constant updates)
             if (
-              detection.confidence > persistentDetections[className].confidence
+              detection.confidence >
+              persistentDetections[className].confidence + 5
             ) {
               persistentDetections[className].confidence = detection.confidence;
+              persistentDetections[className].lastSeen = Date.now();
             }
           }
         });
 
-        // Mark objects not in current detections as not currently visible
-        const currentClasses = new Set(detections.map((d) => d.class));
-        Object.keys(persistentDetections).forEach((className) => {
-          if (!currentClasses.has(className)) {
-            persistentDetections[className].currentlyVisible = false;
-          }
-        });
+        // Only update display if there are new detections or enough time has passed
+        const now = Date.now();
+        if (
+          !hasNewDetections &&
+          now - lastDisplayUpdate < displayUpdateInterval
+        ) {
+          return;
+        }
+        lastDisplayUpdate = now;
 
-        // Update detection count
-        const count = Object.keys(persistentDetections).length;
-        detectionCount.textContent = count;
+        // Update detection count displays
+        const uniquePestCount = Object.keys(persistentDetections).length;
+        uniqueCount.textContent = uniquePestCount;
+        totalCount.textContent = totalDetectionCount;
 
-        // Show/hide clear button
-        clearBtn.style.display = count > 0 ? "block" : "none";
+        // Show/hide clear button based on whether we have any detections
+        clearBtn.style.display = totalDetectionCount > 0 ? "block" : "none";
 
-        // Display all persistent detections
-        if (count === 0) {
+        // Display all unique pest types
+        if (uniquePestCount === 0) {
           detectionsContainer.innerHTML = `
             <div class="no-detections">
               <div class="no-detections-icon">👀</div>
@@ -962,11 +1596,7 @@
         let html = "";
         Object.values(persistentDetections).forEach((detection) => {
           const info = detection.info;
-          const isActive = detection.currentlyVisible;
-          const statusIndicator = isActive ? "🟢" : "⚪";
-          const itemClass = isActive
-            ? "detection-item"
-            : "detection-item inactive";
+          const itemClass = "detection-item";
           const isNew = newDetections.includes(detection.class);
           const animationClass = isNew ? " new-detection" : "";
 
@@ -1041,7 +1671,6 @@
             <div class="${itemClass}${animationClass}">
               <div class="detection-header">
                 <div class="detection-title">
-                  <span class="status-indicator">${statusIndicator}</span>
                   <h4 class="detection-name">${info.name}</h4>
                 </div>
                 <div class="detection-badges">
@@ -1107,6 +1736,44 @@
           stopDetectionPolling();
         }
       });
+
+      // Initialize chart on page load
+      updateChart();
+
+      // Add detection status display
+      function updateDetectionStatus() {
+        fetch("/get_detection_status")
+          .then((response) => response.json())
+          .then((data) => {
+            if (
+              data.status === "success" &&
+              Object.keys(data.detection_status).length > 0
+            ) {
+              // Show detection progress in status
+              const statusElement = document.getElementById("status");
+              const activeDetections = Object.entries(data.detection_status)
+                .map(([pest, info]) => {
+                  const progress = Math.min((info.duration / 3.0) * 100, 100);
+                  const status = info.confirmed ? "✅" : "⏳";
+                  return `${status} ${pest}: ${info.duration}s (${Math.round(
+                    progress
+                  )}%)`;
+                })
+                .join(", ");
+
+              if (activeDetections) {
+                statusElement.innerHTML = `Tracking: ${activeDetections}`;
+                statusElement.className = "status status-tracking";
+              }
+            }
+          })
+          .catch((error) =>
+            console.error("Error fetching detection status:", error)
+          );
+      }
+
+      // Update detection status every second
+      setInterval(updateDetectionStatus, 1000);
     </script>
   </body>
 </html>

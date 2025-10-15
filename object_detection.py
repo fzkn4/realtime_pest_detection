@@ -27,6 +27,16 @@ class RealTimeObjectDetection:
         self.current_detections = []
         self.lock = threading.Lock()
         
+        # Tracking for counting and display
+        self.total_detection_count = 0  # Count every detection
+        self.unique_pests_seen = set()  # Track unique pest types seen
+        self.pest_detection_history = []  # Store all detections with timestamps
+        
+        # Detection duration tracking
+        self.detection_duration_threshold = 3.0  # Minimum 3 seconds to count
+        self.active_detections = {}  # Track ongoing detections by pest type
+        self.confirmed_detections = set()  # Track confirmed detections (3+ seconds)
+        
     def start_camera(self, camera_index=0):
         """Start the camera capture"""
         self.cap = cv2.VideoCapture(camera_index)
@@ -52,6 +62,9 @@ class RealTimeObjectDetection:
         # Run YOLOv8 pest detection inference with optimized settings
         results = self.model(frame, conf=self.confidence_threshold, verbose=False)
         
+        current_time = time.time()
+        current_frame_detections = set()
+        
         # Extract detections
         detections = []
         if len(results) > 0 and results[0].boxes is not None:
@@ -60,10 +73,65 @@ class RealTimeObjectDetection:
                 cls_id = int(box.cls[0])
                 conf = float(box.conf[0])
                 class_name = self.model.names[cls_id]
+                
+                current_frame_detections.add(class_name)
+                
                 detections.append({
                     'class': class_name,
                     'confidence': round(conf * 100, 1)
                 })
+        
+        # Update detection tracking with duration-based counting
+        with self.lock:
+            # Check for new detections
+            for pest_type in current_frame_detections:
+                if pest_type not in self.active_detections:
+                    # Start tracking new detection
+                    self.active_detections[pest_type] = {
+                        'start_time': current_time,
+                        'last_seen': current_time,
+                        'confidence': max([d['confidence'] for d in detections if d['class'] == pest_type])
+                    }
+                else:
+                    # Update existing detection
+                    self.active_detections[pest_type]['last_seen'] = current_time
+                    # Update confidence if higher
+                    current_conf = max([d['confidence'] for d in detections if d['class'] == pest_type])
+                    if current_conf > self.active_detections[pest_type]['confidence']:
+                        self.active_detections[pest_type]['confidence'] = current_conf
+            
+            # Check for confirmed detections (3+ seconds)
+            confirmed_this_frame = []
+            for pest_type, detection_info in list(self.active_detections.items()):
+                duration = current_time - detection_info['start_time']
+                if duration >= self.detection_duration_threshold and pest_type not in self.confirmed_detections:
+                    # Confirm this detection
+                    self.confirmed_detections.add(pest_type)
+                    self.total_detection_count += 1
+                    self.unique_pests_seen.add(pest_type)
+                    
+                    # Store confirmed detection in history
+                    detection_record = {
+                        'class': pest_type,
+                        'confidence': detection_info['confidence'],
+                        'timestamp': current_time,
+                        'duration': duration
+                    }
+                    self.pest_detection_history.append(detection_record)
+                    confirmed_this_frame.append(pest_type)
+            
+            # Remove detections that are no longer active (not seen in current frame)
+            inactive_detections = []
+            for pest_type in list(self.active_detections.keys()):
+                if pest_type not in current_frame_detections:
+                    # Check if enough time has passed since last seen
+                    time_since_last_seen = current_time - self.active_detections[pest_type]['last_seen']
+                    if time_since_last_seen > 1.0:  # 1 second grace period
+                        inactive_detections.append(pest_type)
+            
+            # Remove inactive detections
+            for pest_type in inactive_detections:
+                del self.active_detections[pest_type]
         
         # Update current detections
         with self.lock:
@@ -85,6 +153,38 @@ class RealTimeObjectDetection:
         """Get the current detections"""
         with self.lock:
             return self.current_detections.copy()
+    
+    def get_counting_stats(self):
+        """Get counting statistics"""
+        with self.lock:
+            return {
+                'total_detections': self.total_detection_count,
+                'unique_pests': len(self.unique_pests_seen),
+                'unique_pest_types': list(self.unique_pests_seen)
+            }
+    
+    def get_detection_status(self):
+        """Get current detection tracking status"""
+        with self.lock:
+            current_time = time.time()
+            active_status = {}
+            for pest_type, info in self.active_detections.items():
+                duration = current_time - info['start_time']
+                active_status[pest_type] = {
+                    'duration': round(duration, 1),
+                    'confidence': info['confidence'],
+                    'confirmed': pest_type in self.confirmed_detections
+                }
+            return active_status
+    
+    def reset_counting(self):
+        """Reset all counting statistics"""
+        with self.lock:
+            self.total_detection_count = 0
+            self.unique_pests_seen.clear()
+            self.pest_detection_history.clear()
+            self.active_detections.clear()
+            self.confirmed_detections.clear()
     
     def run_detection(self):
         """Main detection loop running in a separate thread"""
@@ -153,10 +253,12 @@ def create_app():
     
     @app.route('/get_detections')
     def get_detections():
-        """Get current detections with descriptions"""
+        """Get current detections with descriptions and counting stats"""
         global detector
         if detector is not None:
             detections = detector.get_detections()
+            counting_stats = detector.get_counting_stats()
+            
             # Add descriptions to detections
             for detection in detections:
                 class_name = detection['class']
@@ -168,8 +270,21 @@ def create_app():
                         'description': f'{class_name.title()} detected in the monitoring area.',
                         'category': 'Unknown'
                     }
-            return {'status': 'success', 'detections': detections}
-        return {'status': 'success', 'detections': []}
+            
+            return {
+                'status': 'success', 
+                'detections': detections,
+                'counting_stats': counting_stats
+            }
+        return {
+            'status': 'success', 
+            'detections': [],
+            'counting_stats': {
+                'total_detections': 0,
+                'unique_pests': 0,
+                'unique_pest_types': []
+            }
+        }
     
     @app.route('/video_feed')
     def video_feed():
@@ -203,6 +318,8 @@ def create_app():
             detector = RealTimeObjectDetection()
             detector.start_camera(camera_index=camera_index)
             detector.start_detection()
+            # Reset counting for new session
+            detector.reset_counting()
             return {'status': 'success', 'message': f'Pest detection started with camera {camera_index}'}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
@@ -216,6 +333,83 @@ def create_app():
             detector.cleanup()
             detector = None
         return {'status': 'success', 'message': 'Pest detection stopped'}
+    
+    @app.route('/reset_counting')
+    def reset_counting():
+        """Reset counting statistics"""
+        global detector
+        if detector is not None:
+            detector.reset_counting()
+            return {'status': 'success', 'message': 'Counting statistics reset'}
+        return {'status': 'error', 'message': 'No active detection session'}
+
+    @app.route('/get_detection_status')
+    def get_detection_status():
+        """Get current detection tracking status"""
+        global detector
+        if detector is not None:
+            status = detector.get_detection_status()
+            return {'status': 'success', 'detection_status': status}
+        return {'status': 'error', 'message': 'No active detection session'}
+
+    @app.route('/get_pest_summary')
+    def get_pest_summary():
+        """Get pest detection summary for pie chart"""
+        global detector
+        if detector is not None:
+            counting_stats = detector.get_counting_stats()
+            
+            # Count detections by pest type from history
+            pest_counts = {}
+            with detector.lock:
+                for detection in detector.pest_detection_history:
+                    pest_type = detection['class']
+                    if pest_type in pest_counts:
+                        pest_counts[pest_type] += 1
+                    else:
+                        pest_counts[pest_type] = 1
+            
+            # Prepare data for pie chart
+            chart_data = []
+            colors = [
+                '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+                '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+                '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2',
+                '#A9DFBF', '#F9E79F', '#D5A6BD', '#AED6F1', '#A3E4D7'
+            ]
+            
+            for i, (pest_type, count) in enumerate(pest_counts.items()):
+                # Get pest info from descriptions
+                if pest_type in object_descriptions:
+                    pest_name = object_descriptions[pest_type]['name']
+                    pest_category = object_descriptions[pest_type]['category']
+                else:
+                    pest_name = pest_type.title()
+                    pest_category = 'Unknown'
+                
+                chart_data.append({
+                    'label': pest_name,
+                    'value': count,
+                    'color': colors[i % len(colors)],
+                    'category': pest_category,
+                    'type': pest_type
+                })
+            
+            # Sort by count (descending)
+            chart_data.sort(key=lambda x: x['value'], reverse=True)
+            
+            return {
+                'status': 'success',
+                'chart_data': chart_data,
+                'total_detections': counting_stats['total_detections'],
+                'unique_pests': counting_stats['unique_pests']
+            }
+        return {
+            'status': 'success',
+            'chart_data': [],
+            'total_detections': 0,
+            'unique_pests': 0
+        }
     
     return app
 
