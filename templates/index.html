@@ -521,6 +521,60 @@
         cursor: help;
       }
 
+      /* Notification banner styles */
+      .notification-banner {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #ffc107, #fd7e14);
+        color: #212529;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        font-weight: 600;
+        font-size: 0.9rem;
+        max-width: 300px;
+        animation: slideInRight 0.3s ease-out;
+        border-left: 4px solid #ffc107;
+      }
+
+      .notification-banner.full {
+        background: linear-gradient(135deg, #dc3545, #e83e8c);
+        color: white;
+        border-left-color: #dc3545;
+        animation: slideInRight 0.3s ease-out,
+          urgentPulse 2s ease-in-out infinite;
+      }
+
+      .notification-banner.medium {
+        background: linear-gradient(135deg, #ffc107, #fd7e14);
+        color: #212529;
+        border-left-color: #ffc107;
+      }
+
+      @keyframes slideInRight {
+        0% {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideOutRight {
+        0% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+
       /* Responsive design for trap status */
       @media (max-width: 768px) {
         .trap-controls {
@@ -2069,6 +2123,32 @@
       // Initialize chart on page load
       updateChart();
 
+      // Request notification permission on page load
+      if ("Notification" in window) {
+        if (Notification.permission === "default") {
+          Notification.requestPermission().then((permission) => {
+            console.log("Notification permission:", permission);
+            if (permission === "granted") {
+              console.log("✅ Push notifications enabled for trap alerts");
+            } else {
+              console.log(
+                "❌ Push notifications disabled - only visual alerts will show"
+              );
+            }
+          });
+        } else if (Notification.permission === "granted") {
+          console.log("✅ Push notifications already enabled");
+        } else {
+          console.log(
+            "❌ Push notifications blocked - only visual alerts will show"
+          );
+        }
+      } else {
+        console.log(
+          "❌ Browser does not support notifications - only visual alerts will show"
+        );
+      }
+
       // Initialize trap status on page load
       updateTrapStatus();
 
@@ -2109,6 +2189,81 @@
 
       // Update trap status every 5 seconds
       setInterval(updateTrapStatus, 5000);
+
+      // Track previous trap status for notifications
+      let previousTrapStatus = null;
+
+      // Function to show push notification
+      function showTrapNotification(status, message) {
+        // Show browser notification
+        if ("Notification" in window && Notification.permission === "granted") {
+          const notification = new Notification("Pest Trap Alert", {
+            body: message,
+            icon: "/favicon.ico", // You can replace this with a custom icon
+            badge: "/favicon.ico",
+            tag: "trap-status", // This prevents multiple notifications
+            requireInteraction: status === "full", // Full status requires user interaction
+            silent: false,
+            vibrate: status === "full" ? [200, 100, 200] : [200], // Different vibration patterns
+          });
+
+          // Auto-close notification after 5 seconds for medium, 10 seconds for full
+          const autoCloseTime = status === "full" ? 10000 : 5000;
+          setTimeout(() => {
+            notification.close();
+          }, autoCloseTime);
+
+          // Handle notification click
+          notification.onclick = function () {
+            window.focus();
+            notification.close();
+          };
+        }
+
+        // Show visual banner notification
+        showNotificationBanner(status, message);
+      }
+
+      // Function to show visual notification banner
+      function showNotificationBanner(status, message) {
+        // Remove any existing notification banner
+        const existingBanner = document.querySelector(".notification-banner");
+        if (existingBanner) {
+          existingBanner.remove();
+        }
+
+        // Create new notification banner
+        const banner = document.createElement("div");
+        banner.className = `notification-banner ${status}`;
+        banner.textContent = message;
+
+        // Add close button
+        const closeBtn = document.createElement("span");
+        closeBtn.innerHTML = "&times;";
+        closeBtn.style.cssText = `
+          position: absolute;
+          top: 5px;
+          right: 10px;
+          cursor: pointer;
+          font-size: 1.2rem;
+          font-weight: bold;
+          opacity: 0.7;
+        `;
+        closeBtn.onclick = () => banner.remove();
+        banner.appendChild(closeBtn);
+
+        // Add to page
+        document.body.appendChild(banner);
+
+        // Auto-remove banner after delay
+        const autoCloseTime = status === "full" ? 8000 : 4000;
+        setTimeout(() => {
+          if (banner.parentNode) {
+            banner.style.animation = "slideOutRight 0.3s ease-in";
+            setTimeout(() => banner.remove(), 300);
+          }
+        }, autoCloseTime);
+      }
 
       function updateTrapStatus() {
         fetch("/get_trap_status")
@@ -2175,6 +2330,22 @@
 
               trapDescription.textContent = description;
 
+              // Check for status changes and trigger notifications
+              if (previousTrapStatus !== trapStatus.status) {
+                if (trapStatus.status === "medium") {
+                  showTrapNotification(
+                    "medium",
+                    "⚠️ Trap is getting full - monitor closely"
+                  );
+                } else if (trapStatus.status === "full") {
+                  showTrapNotification(
+                    "full",
+                    "🚨 Trap is full - needs immediate attention!"
+                  );
+                }
+                previousTrapStatus = trapStatus.status;
+              }
+
               console.log(
                 "Trap status updated successfully to:",
                 trapStatus.status
@@ -2208,6 +2379,19 @@
 
               // Immediately update the display
               updateTrapStatus();
+
+              // Show immediate notification for manual updates
+              if (level === "medium") {
+                showTrapNotification(
+                  "medium",
+                  "⚠️ Trap status manually set to medium"
+                );
+              } else if (level === "full") {
+                showTrapNotification(
+                  "full",
+                  "🚨 Trap status manually set to full"
+                );
+              }
 
               // Reset button after delay
               setTimeout(() => {
