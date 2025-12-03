@@ -6,6 +6,11 @@
 const char *ssid = "wat";
 const char *password = "admin123";
 
+// Static IP configuration
+IPAddress local_IP(192, 168, 4, 11);
+IPAddress gateway(192, 168, 4, 1);
+IPAddress subnet(255, 255, 255, 0);
+
 void startCameraServer();
 void setupLedFlash();
 
@@ -139,6 +144,10 @@ void setup() {
 #if defined(LED_GPIO_NUM)
   setupLedFlash();
 #endif
+
+  if (!WiFi.config(local_IP, gateway, subnet)) {
+    Serial.println("STA Failed to configure");
+  }
 
   WiFi.begin(ssid, password);
   WiFi.setSleep(false);
