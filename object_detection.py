@@ -10,6 +10,11 @@ from PIL import Image
 import json
 import os
 
+# Hardcoded ESP32-CAM IP and stream URL
+ESP32_CAM_IP = "192.168.4.11"
+VIDEO_STREAM_URL = f"http://{ESP32_CAM_IP}:81/stream"
+
+
 class RealTimeObjectDetection:
     def __init__(self, model_path='datasets/yoloip1/best.pt', confidence_threshold=0.4):
         """
@@ -42,48 +47,27 @@ class RealTimeObjectDetection:
         self.trap_capacity = 100  # Maximum capacity
         self.trap_current = 0  # Current fill level
         
-    def start_camera(self, camera_index=None, camera_ip=None):
-        """Start the camera capture
+    def start_camera(self):
+        """Start the camera capture from the hardcoded ESP32-CAM stream."""
         
-        Args:
-            camera_index: Local camera index (0, 1, etc.) for built-in cameras
-            camera_ip: IP address for ESP32-CAM streaming over network
-        """
-        if camera_ip:
-            # ESP32-CAM typically streams at /stream endpoint
-            # Try common ESP32-CAM stream URLs
-            stream_urls = [
-                f"http://{camera_ip}/stream",
-                f"http://{camera_ip}:81/stream",
-                f"http://{camera_ip}/cam-hi.jpg",  # Fallback to snapshot
-            ]
-            
+        print(f"Attempting to connect to ESP32-CAM at: {VIDEO_STREAM_URL}")
+        self.cap = cv2.VideoCapture(VIDEO_STREAM_URL)
+        
+        if not self.cap.isOpened():
+            raise ValueError(f"Could not connect to ESP32-CAM at {VIDEO_STREAM_URL}. Please check:\n"
+                           f"1. IP address is correct\n"
+                           f"2. ESP32-CAM is powered on and connected to network\n"
+                           f"3. Stream endpoint is accessible")
+
+        # Test if we can actually read a frame
+        ret, frame = self.cap.read()
+        if not ret or frame is None:
+            self.cap.release()
             self.cap = None
-            for url in stream_urls:
-                print(f"Attempting to connect to ESP32-CAM at: {url}")
-                self.cap = cv2.VideoCapture(url)
-                if self.cap.isOpened():
-                    # Test if we can actually read a frame
-                    ret, frame = self.cap.read()
-                    if ret and frame is not None:
-                        print(f"Successfully connected to ESP32-CAM at: {url}")
-                        break
-                    else:
-                        self.cap.release()
-                        self.cap = None
-            
-            if not self.cap or not self.cap.isOpened():
-                raise ValueError(f"Could not connect to ESP32-CAM at {camera_ip}. Please check:\n"
-                               f"1. IP address is correct\n"
-                               f"2. ESP32-CAM is powered on and connected to network\n"
-                               f"3. Stream endpoint is accessible")
-        else:
-            # Use local camera
-            camera_idx = camera_index if camera_index is not None else 0
-            self.cap = cv2.VideoCapture(camera_idx)
-            if not self.cap.isOpened():
-                raise ValueError(f"Could not open camera {camera_idx}")
-        
+            raise ValueError(f"Successfully connected to {VIDEO_STREAM_URL} but failed to read a frame.")
+
+        print(f"Successfully connected to ESP32-CAM at: {VIDEO_STREAM_URL}")
+
         # Set camera properties for better performance (may not work for all stream sources)
         try:
             self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -393,20 +377,9 @@ def create_app():
         """Start pest detection"""
         global detector
         try:
-            from flask import request
-            camera_ip = request.args.get('ip', default=None, type=str)
-            camera_index = request.args.get('camera', default=None, type=int)
-            
             detector = RealTimeObjectDetection()
-            
-            # Prefer IP address if provided, otherwise use camera index
-            if camera_ip:
-                detector.start_camera(camera_ip=camera_ip)
-                message = f'Pest detection started with ESP32-CAM at {camera_ip}'
-            else:
-                camera_idx = camera_index if camera_index is not None else 0
-                detector.start_camera(camera_index=camera_idx)
-                message = f'Pest detection started with camera {camera_idx}'
+            detector.start_camera()
+            message = f'Pest detection started with ESP32-CAM at {ESP32_CAM_IP}'
             
             detector.start_detection()
             # Reset counting for new session
