@@ -1417,26 +1417,7 @@
               <button id="toggleChartBtn" class="chart-toggle-btn">
                 <span id="chartToggleText">Hide Chart</span>
               </button>
-              <div class="trap-controls">
-                <button
-                  onclick="updateTrapStatusManually('low')"
-                  class="trap-btn low"
-                >
-                  Low
-                </button>
-                <button
-                  onclick="updateTrapStatusManually('medium')"
-                  class="trap-btn medium"
-                >
-                  Medium
-                </button>
-                <button
-                  onclick="updateTrapStatusManually('full')"
-                  class="trap-btn full"
-                >
-                  Full
-                </button>
-              </div>
+
             </div>
           </div>
 
@@ -1467,6 +1448,7 @@
               <div class="stat-label">Most Common</div>
             </div>
             <div
+              id="trapStatusCard"
               class="stat-card trap-status-card"
               data-tooltip="Click to view trap details"
             >
@@ -1522,11 +1504,64 @@
       const chartContainer = document.getElementById("chartContainer");
       const chartLegend = document.getElementById("chartLegend");
       const chartStats = document.getElementById("chartStats");
+      const trapStatusCard = document.getElementById("trapStatusCard");
 
       startBtn.addEventListener("click", startDetection);
       stopBtn.addEventListener("click", stopDetection);
       clearBtn.addEventListener("click", clearDetections);
       toggleChartBtn.addEventListener("click", toggleChart);
+
+      // -- TRAP STATUS UPDATE --
+      const sensorUrl = "http://192.168.1.103/sensor"; // IMPORTANT: Replace with your ESP32 Camera's IP address
+
+      function updateTrapStatus() {
+        fetch(sensorUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const level = data.level_percent;
+            const card = trapStatusCard;
+            const fill = document.getElementById("trapProgressFill");
+            const percentage = document.getElementById("trapPercentage");
+            const levelText = document.getElementById("trapLevel");
+            const description = document.getElementById("trapDescription");
+
+            card.classList.remove("low", "medium", "full");
+
+            let status = "low";
+            if (level >= 80) {
+              status = "full";
+            } else if (level >= 40) {
+              status = "medium";
+            }
+
+            card.classList.add(status);
+            fill.style.width = `${level.toFixed(1)}%`;
+            percentage.textContent = `${level.toFixed(1)}% Full`;
+            levelText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            description.textContent = `Trap is ${status}.`;
+
+          })
+          .catch((error) => {
+            console.error("Error fetching sensor data:", error);
+            const card = trapStatusCard;
+            card.classList.remove("low", "medium", "full");
+            card.classList.add("error"); // You can add an 'error' class for styling
+            document.getElementById("trapLevel").textContent = "Error";
+            document.getElementById("trapDescription").textContent = "Could not connect to sensor.";
+          });
+      }
+      
+      // Update trap status every 3 seconds
+      setInterval(updateTrapStatus, 3000);
+      // Initial call
+      document.addEventListener('DOMContentLoaded', updateTrapStatus);
+      // -- END TRAP STATUS UPDATE --
+
 
       async function clearDetections() {
         persistentDetections = {};

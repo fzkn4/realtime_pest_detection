@@ -475,5 +475,5 @@ def create_app():
 if __name__ == '__main__':
     app = create_app()
     print("Starting Flask application...")
-    print("Open your browser and go to: http://localhost:5000")
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+    print("Open your browser and go to: http://localhost:5001")
+    app.run(host='0.0.0.0', port=5001, debug=True, threaded=True)
