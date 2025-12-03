@@ -42,17 +42,57 @@ class RealTimeObjectDetection:
         self.trap_capacity = 100  # Maximum capacity
         self.trap_current = 0  # Current fill level
         
-    def start_camera(self, camera_index=0):
-        """Start the camera capture"""
-        self.cap = cv2.VideoCapture(camera_index)
-        if not self.cap.isOpened():
-            raise ValueError(f"Could not open camera {camera_index}")
+    def start_camera(self, camera_index=None, camera_ip=None):
+        """Start the camera capture
         
-        # Set camera properties for better performance
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-        self.cap.set(cv2.CAP_PROP_FPS, 30)
-        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Reduce buffer size for lower latency
+        Args:
+            camera_index: Local camera index (0, 1, etc.) for built-in cameras
+            camera_ip: IP address for ESP32-CAM streaming over network
+        """
+        if camera_ip:
+            # ESP32-CAM typically streams at /stream endpoint
+            # Try common ESP32-CAM stream URLs
+            stream_urls = [
+                f"http://{camera_ip}/stream",
+                f"http://{camera_ip}:81/stream",
+                f"http://{camera_ip}/cam-hi.jpg",  # Fallback to snapshot
+            ]
+            
+            self.cap = None
+            for url in stream_urls:
+                print(f"Attempting to connect to ESP32-CAM at: {url}")
+                self.cap = cv2.VideoCapture(url)
+                if self.cap.isOpened():
+                    # Test if we can actually read a frame
+                    ret, frame = self.cap.read()
+                    if ret and frame is not None:
+                        print(f"Successfully connected to ESP32-CAM at: {url}")
+                        break
+                    else:
+                        self.cap.release()
+                        self.cap = None
+            
+            if not self.cap or not self.cap.isOpened():
+                raise ValueError(f"Could not connect to ESP32-CAM at {camera_ip}. Please check:\n"
+                               f"1. IP address is correct\n"
+                               f"2. ESP32-CAM is powered on and connected to network\n"
+                               f"3. Stream endpoint is accessible")
+        else:
+            # Use local camera
+            camera_idx = camera_index if camera_index is not None else 0
+            self.cap = cv2.VideoCapture(camera_idx)
+            if not self.cap.isOpened():
+                raise ValueError(f"Could not open camera {camera_idx}")
+        
+        # Set camera properties for better performance (may not work for all stream sources)
+        try:
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+            self.cap.set(cv2.CAP_PROP_FPS, 30)
+            self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Reduce buffer size for lower latency
+        except:
+            # Some stream sources may not support setting these properties
+            pass
         
     def detect_objects(self, frame):
         """
@@ -354,14 +394,24 @@ def create_app():
         global detector
         try:
             from flask import request
-            camera_index = request.args.get('camera', default=0, type=int)
+            camera_ip = request.args.get('ip', default=None, type=str)
+            camera_index = request.args.get('camera', default=None, type=int)
             
             detector = RealTimeObjectDetection()
-            detector.start_camera(camera_index=camera_index)
+            
+            # Prefer IP address if provided, otherwise use camera index
+            if camera_ip:
+                detector.start_camera(camera_ip=camera_ip)
+                message = f'Pest detection started with ESP32-CAM at {camera_ip}'
+            else:
+                camera_idx = camera_index if camera_index is not None else 0
+                detector.start_camera(camera_index=camera_idx)
+                message = f'Pest detection started with camera {camera_idx}'
+            
             detector.start_detection()
             # Reset counting for new session
             detector.reset_counting()
-            return {'status': 'success', 'message': f'Pest detection started with camera {camera_index}'}
+            return {'status': 'success', 'message': message}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
     
