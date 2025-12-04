@@ -9,10 +9,12 @@ from io import BytesIO
 from PIL import Image
 import json
 import os
+import requests
 
 # Hardcoded ESP32-CAM IP and stream URL
 ESP32_CAM_IP = "192.168.4.11"
 VIDEO_STREAM_URL = f"http://{ESP32_CAM_IP}:81/stream"
+SENSOR_DATA_URL = f"http://{ESP32_CAM_IP}/sensor"
 
 
 class RealTimeObjectDetection:
@@ -42,11 +44,6 @@ class RealTimeObjectDetection:
         self.detection_duration_threshold = 3.0  # Minimum 3 seconds to count
         self.active_detections = {}  # Track ongoing detections by pest type
         self.confirmed_detections = set()  # Track confirmed detections (3+ seconds)
-        
-        # Pest trap status tracking
-        self.trap_status = "low"  # low, medium, full
-        self.trap_capacity = 100  # Maximum capacity
-        self.trap_current = 0  # Current fill level
         
     def start_camera(self):
         """Start the camera capture from the hardcoded ESP32-CAM stream."""
@@ -207,40 +204,6 @@ class RealTimeObjectDetection:
                 }
             return active_status
     
-    def get_trap_status(self):
-        """Get current pest trap status"""
-        with self.lock:
-            return {
-                'status': self.trap_status,
-                'current': self.trap_current,
-                'capacity': self.trap_capacity,
-                'percentage': round((self.trap_current / self.trap_capacity) * 100, 1)
-            }
-    
-    def update_trap_status(self, level):
-        """Update trap status (low, medium, full)"""
-        with self.lock:
-            if level == "low":
-                self.trap_status = "low"
-                self.trap_current = 25
-            elif level == "medium":
-                self.trap_status = "medium"
-                self.trap_current = 65
-            elif level == "full":
-                self.trap_status = "full"
-                self.trap_current = 95
-            else:
-                # Auto-calculate based on detection count
-                if self.total_detection_count < 10:
-                    self.trap_status = "low"
-                    self.trap_current = min(25, self.total_detection_count * 2.5)
-                elif self.total_detection_count < 30:
-                    self.trap_status = "medium"
-                    self.trap_current = min(65, 25 + (self.total_detection_count - 10) * 2)
-                else:
-                    self.trap_status = "full"
-                    self.trap_current = min(95, 65 + (self.total_detection_count - 30) * 1.5)
-    
     def reset_counting(self):
         """Reset all counting statistics"""
         with self.lock:
@@ -249,8 +212,6 @@ class RealTimeObjectDetection:
             self.pest_detection_history.clear()
             self.active_detections.clear()
             self.confirmed_detections.clear()
-            self.trap_status = "low"
-            self.trap_current = 0
     
     def run_detection(self):
         """Main detection loop running in a separate thread"""
@@ -449,23 +410,20 @@ def create_app():
             return {'status': 'success', 'detection_status': status}
         return {'status': 'error', 'message': 'No active detection session'}
 
-    @app.route('/get_trap_status')
-    def get_trap_status():
-        """Get current pest trap status"""
-        global detector
-        if detector is not None:
-            status = detector.get_trap_status()
-            return {'status': 'success', 'trap_status': status}
-        return {'status': 'error', 'message': 'No active detection session'}
+    @app.route('/get_sensor_data')
+    def get_sensor_data():
+        """Fetch real-time sensor data from ESP32-CAM"""
+        try:
+            response = requests.get(SENSOR_DATA_URL, timeout=2)
+            response.raise_for_status()  # Raise an exception for bad status codes
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"Error fetching sensor data: {e}")
+            return {
+                'status': 'error',
+                'message': 'Could not connect to ESP32 sensor. Please check device IP and connection.'
+            }, 503  # Service Unavailable
 
-    @app.route('/update_trap_status/<level>')
-    def update_trap_status(level):
-        """Update trap status (low, medium, full)"""
-        global detector
-        if detector is not None:
-            detector.update_trap_status(level)
-            return {'status': 'success', 'message': f'Trap status updated to {level}'}
-        return {'status': 'error', 'message': 'No active detection session'}
 
     @app.route('/get_pest_summary')
     def get_pest_summary():

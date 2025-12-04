@@ -1519,10 +1519,10 @@
       clearBtn.addEventListener("click", clearDetections);
       toggleChartBtn.addEventListener("click", toggleChart);
 
-      // -- TRAP STATUS UPDATE --
-      const sensorUrl = "http://192.168.4.11/sensor"; 
+      // -- SENSOR DATA UPDATE --
+      const sensorUrl = "/get_sensor_data"; 
 
-      function updateTrapStatus() {
+      function updateSensorData() {
         fetch(sensorUrl)
           .then((response) => {
             if (!response.ok) {
@@ -1531,6 +1531,11 @@
             return response.json();
           })
           .then((data) => {
+            // Check if data contains an error status from the proxy
+            if (data.status === 'error') {
+              throw new Error(data.message);
+            }
+
             const level = data.level_percent;
             const card = trapStatusCard;
             const fill = document.getElementById("trapProgressFill");
@@ -1538,20 +1543,23 @@
             const levelText = document.getElementById("trapLevel");
             const description = document.getElementById("trapDescription");
 
-            card.classList.remove("low", "medium", "full");
+            card.classList.remove("low", "medium", "full", "error");
 
             let status = "low";
+            let statusMessage = "Trap is functioning normally";
             if (level >= 80) {
               status = "full";
+              statusMessage = "Trap is full and requires attention";
             } else if (level >= 40) {
               status = "medium";
+              statusMessage = "Trap is moderately full";
             }
 
             card.classList.add(status);
             fill.style.width = `${level.toFixed(1)}%`;
             percentage.textContent = `${level.toFixed(1)}% Full`;
             levelText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-            description.textContent = `Trap is ${status}.`;
+            description.textContent = statusMessage;
 
           })
           .catch((error) => {
@@ -1561,14 +1569,16 @@
             card.classList.add("error"); // You can add an 'error' class for styling
             document.getElementById("trapLevel").textContent = "Error";
             document.getElementById("trapDescription").textContent = "Could not connect to sensor.";
+            document.getElementById("trapProgressFill").style.width = "0%";
+            document.getElementById("trapPercentage").textContent = "N/A";
           });
       }
       
-      // Update trap status every 3 seconds
-      setInterval(updateTrapStatus, 3000);
+      // Update sensor data every 3 seconds
+      setInterval(updateSensorData, 3000);
       // Initial call
-      document.addEventListener('DOMContentLoaded', updateTrapStatus);
-      // -- END TRAP STATUS UPDATE --
+      document.addEventListener('DOMContentLoaded', updateSensorData);
+      // -- END SENSOR DATA UPDATE --
 
 
       async function clearDetections() {
