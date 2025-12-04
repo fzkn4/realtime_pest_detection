@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include "esp_http_server.h"
 #include "board_config.h"
+#include "soc/rtc_cntl_reg.h"  // Required for brownout detector register
 
 const char *ssid = "wat";
 const char *password = "admin123";
@@ -79,6 +80,9 @@ void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   
+  // Disable brownout detector for stable streaming
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
+  
   // Ultrasonic pins
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
@@ -105,16 +109,18 @@ void setup() {
   cam_config.pin_reset = RESET_GPIO_NUM;
   cam_config.xclk_freq_hz = 20000000;
   cam_config.pixel_format = PIXFORMAT_JPEG;
-  cam_config.frame_size = FRAMESIZE_SVGA;  // or FRAMESIZE_VGA for even lighter load
+  cam_config.frame_size = FRAMESIZE_VGA;  // 640x480 max stable for optimal streaming
 
-  // PSRAM handling
+  // PSRAM handling - optimized for low latency streaming
   if (psramFound()) {
-      cam_config.jpeg_quality = 12;         // slightly higher quality (still OK)
-      cam_config.fb_count = 2;
-      cam_config.grab_mode = CAMERA_GRAB_LATEST;
+      cam_config.jpeg_quality = 12;         // 10-63 (lower = higher quality)
+      cam_config.fb_count = 1;              // Single buffer prevents stalls
+      cam_config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;  // Low latency mode
       cam_config.fb_location = CAMERA_FB_IN_PSRAM;
   } else {
       cam_config.frame_size = FRAMESIZE_QVGA;
+      cam_config.fb_count = 1;              // Single buffer for non-PSRAM too
+      cam_config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
       cam_config.fb_location = CAMERA_FB_IN_DRAM;
   }
 
@@ -132,7 +138,7 @@ void setup() {
     s->set_saturation(s, -2);
   }
   if (cam_config.pixel_format == PIXFORMAT_JPEG) {
-    s->set_framesize(s, FRAMESIZE_QVGA);
+    s->set_framesize(s, FRAMESIZE_VGA);  // Set to VGA for optimal streaming
   }
 
 #if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)

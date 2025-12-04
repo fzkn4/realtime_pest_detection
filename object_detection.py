@@ -10,6 +10,7 @@ from PIL import Image
 import json
 import os
 import requests
+from capture_thread import StreamCapture
 
 # Hardcoded ESP32-CAM IP and stream URL
 ESP32_CAM_IP = "192.168.4.11"
@@ -28,7 +29,7 @@ class RealTimeObjectDetection:
         """
         self.model = YOLO(model_path)
         self.confidence_threshold = confidence_threshold
-        self.cap = None
+        self.stream_capture = None  # Threaded stream capture
         self.is_running = False
         self.current_frame = None
         self.current_detections = []
@@ -46,35 +47,31 @@ class RealTimeObjectDetection:
         self.confirmed_detections = set()  # Track confirmed detections (3+ seconds)
         
     def start_camera(self):
-        """Start the camera capture from the hardcoded ESP32-CAM stream."""
+        """Start the threaded camera capture from the hardcoded ESP32-CAM stream."""
         
         print(f"Attempting to connect to ESP32-CAM at: {VIDEO_STREAM_URL}")
-        self.cap = cv2.VideoCapture(VIDEO_STREAM_URL)
+        self.stream_capture = StreamCapture(VIDEO_STREAM_URL, queue_size=10)
         
-        if not self.cap.isOpened():
+        if not self.stream_capture.is_opened():
             raise ValueError(f"Could not connect to ESP32-CAM at {VIDEO_STREAM_URL}. Please check:\n"
                            f"1. IP address is correct\n"
                            f"2. ESP32-CAM is powered on and connected to network\n"
                            f"3. Stream endpoint is accessible")
 
+        # Start the threaded capture
+        self.stream_capture.start()
+        
+        # Wait a moment for first frame
+        time.sleep(0.5)
+        
         # Test if we can actually read a frame
-        ret, frame = self.cap.read()
-        if not ret or frame is None:
-            self.cap.release()
-            self.cap = None
+        test_frame = self.stream_capture.get_frame()
+        if test_frame is None:
+            self.stream_capture.stop()
+            self.stream_capture = None
             raise ValueError(f"Successfully connected to {VIDEO_STREAM_URL} but failed to read a frame.")
 
         print(f"Successfully connected to ESP32-CAM at: {VIDEO_STREAM_URL}")
-
-        # Set camera properties for better performance (may not work for all stream sources)
-        try:
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-            self.cap.set(cv2.CAP_PROP_FPS, 30)
-            self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Reduce buffer size for lower latency
-        except:
-            # Some stream sources may not support setting these properties
-            pass
         
     def detect_objects(self, frame):
         """
@@ -214,45 +211,30 @@ class RealTimeObjectDetection:
             self.confirmed_detections.clear()
     
     def run_detection(self):
-        """Main detection loop running in a separate thread"""
+        """Main detection loop running in a separate thread - uses threaded capture"""
         self.is_running = True
-        failure_count = 0
-        max_failures = 30  # e.g., ~0.5 seconds at 60 fps
         frame_count = 0
 
         while self.is_running:
             if self.stop_event.is_set():
                 break
 
-            if not self.cap or not self.cap.isOpened():
-                print("Camera not opened, attempting restart...")
+            if not self.stream_capture or not self.stream_capture.is_opened():
+                print("Stream capture not opened, attempting restart...")
                 try:
                     self.start_camera()
-                    failure_count = 0
                 except Exception as e:
                     print(f"Camera restart failed: {e}")
                     time.sleep(1)
                     continue
 
-            ret, frame = self.cap.read()
-            if not ret:
-                failure_count += 1
-                print(f"Failed to read frame ({failure_count}/{max_failures})")
-                if failure_count >= max_failures:
-                    print("Too many frame failures, restarting camera...")
-                    self.cleanup()
-                    time.sleep(1)
-                    try:
-                        self.start_camera()
-                        failure_count = 0
-                    except Exception as e:
-                        print(f"Camera restart failed: {e}")
-                        time.sleep(2)
-                else:
-                    time.sleep(0.05)
+            # Get latest frame from threaded queue (non-blocking)
+            frame = self.stream_capture.get_frame()
+            
+            if frame is None:
+                # No frame available, continue to next iteration
+                time.sleep(0.01)
                 continue
-
-            failure_count = 0
             
             # Skip frames for better performance (process every 2nd frame)
             frame_count += 1
@@ -269,8 +251,8 @@ class RealTimeObjectDetection:
                     if self.current_frame is not None:
                         pass  # Keep current frame
             
-            # Reduced delay for better responsiveness
-            time.sleep(0.016)  # ~60 FPS capture, 30 FPS processing
+            # Small delay to prevent CPU hogging
+            time.sleep(0.01)  # Threaded capture handles frame rate
         
         self.cleanup()
     
@@ -289,8 +271,9 @@ class RealTimeObjectDetection:
     
     def cleanup(self):
         """Clean up resources"""
-        if self.cap is not None:
-            self.cap.release()
+        if self.stream_capture is not None:
+            self.stream_capture.stop()
+            self.stream_capture = None
         cv2.destroyAllWindows()
 
 # Global detection instance

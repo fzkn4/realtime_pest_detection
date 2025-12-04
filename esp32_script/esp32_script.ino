@@ -34,7 +34,13 @@ void handleRoot() {
   html += "</head><body>";
 
   html += "<h1>Devices Connected to ESP32 AP</h1>";
+  // Show information about the device currently viewing this page
+  IPAddress remoteIp = server.client().remoteIP();
   html += "<p>This page refreshes every 5 seconds.</p>";
+  html += "<p><strong>Your device IP (on this AP): </strong>" + remoteIp.toString() + "</p>";
+  html += "<p><em>Note:</em> Due to changes in newer ESP32 cores, only MAC addresses of connected "
+          "devices are available via the Wi-Fi API. IP address and device name for every client "
+          "cannot be reliably queried from the ESP32 alone.</p>";
   html += "<table><tr><th>#</th><th>Device MAC Address</th><th>IP Address</th></tr>";
 
   // Get list of connected stations (MAC addresses)
