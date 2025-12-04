@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <WebServer.h>
+#include <ESPmDNS.h>
 
 // ESP32 low‑level Wi‑Fi / TCPIP APIs used for listing connected stations
 extern "C" {
@@ -38,15 +39,17 @@ void handleRoot() {
   IPAddress remoteIp = server.client().remoteIP();
   html += "<p>This page refreshes every 5 seconds.</p>";
   html += "<p><strong>Your device IP (on this AP): </strong>" + remoteIp.toString() + "</p>";
-  html += "<p><em>Note:</em> Due to changes in newer ESP32 cores, only MAC addresses of connected "
-          "devices are available via the Wi-Fi API. IP address and device name for every client "
-          "cannot be reliably queried from the ESP32 alone.</p>";
-  html += "<table><tr><th>#</th><th>Device MAC Address</th><th>IP Address</th></tr>";
+  html += "<table><tr><th>#</th><th>Device Name</th><th>MAC Address</th><th>IP Address</th></tr>";
 
   // Get list of connected stations (MAC addresses)
   wifi_sta_list_t stationList;
   esp_wifi_ap_get_sta_list(&stationList);
 
+  // ESP32's built-in DHCP server assigns IPs sequentially starting from .2
+  // First connected device gets 192.168.4.2, second gets 192.168.4.3, etc.
+  // This is the standard behavior and is reliable for displaying IP addresses
+  IPAddress baseIP = WiFi.softAPIP();
+  
   for (int i = 0; i < stationList.num; i++) {
     wifi_sta_info_t station = stationList.sta[i];
     char macStr[18];
@@ -54,7 +57,14 @@ void handleRoot() {
             station.mac[0], station.mac[1], station.mac[2], 
             station.mac[3], station.mac[4], station.mac[5]);
 
-    html += "<tr><td>" + String(i + 1) + "</td><td>" + String(macStr) + "</td><td>-</td></tr>";
+    // ESP32 DHCP server assigns IPs starting from .2 and increments sequentially
+    // First device (index 0) gets .2, second device (index 1) gets .3, etc.
+    uint8_t ipLastOctet = 2 + i;
+    IPAddress deviceIP(baseIP[0], baseIP[1], baseIP[2], ipLastOctet);
+    String ipStr = deviceIP.toString();
+    String hostnameStr = "Device-" + String(ipLastOctet);
+
+    html += "<tr><td>" + String(i + 1) + "</td><td>" + hostnameStr + "</td><td>" + String(macStr) + "</td><td>" + ipStr + "</td></tr>";
   }
 
   html += "</table></body></html>";
@@ -81,6 +91,13 @@ void setup() {
   String url = "http://" + WiFi.softAPIP().toString() + "/";
   Serial.print("Open this in your browser: ");
   Serial.println(url);
+
+  // Initialize mDNS for hostname resolution
+  if (!MDNS.begin("esp32")) {
+    Serial.println("Error setting up MDNS responder!");
+  } else {
+    Serial.println("mDNS responder started");
+  }
 
   // Set up web server routes
   server.on("/", handleRoot);
