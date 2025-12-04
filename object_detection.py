@@ -31,6 +31,7 @@ class RealTimeObjectDetection:
         self.current_frame = None
         self.current_detections = []
         self.lock = threading.Lock()
+        self.stop_event = threading.Event()
         
         # Tracking for counting and display
         self.total_detection_count = 0  # Count every detection
@@ -254,13 +255,43 @@ class RealTimeObjectDetection:
     def run_detection(self):
         """Main detection loop running in a separate thread"""
         self.is_running = True
+        failure_count = 0
+        max_failures = 30  # e.g., ~0.5 seconds at 60 fps
         frame_count = 0
-        
-        while self.is_running and self.cap is not None:
+
+        while self.is_running:
+            if self.stop_event.is_set():
+                break
+
+            if not self.cap or not self.cap.isOpened():
+                print("Camera not opened, attempting restart...")
+                try:
+                    self.start_camera()
+                    failure_count = 0
+                except Exception as e:
+                    print(f"Camera restart failed: {e}")
+                    time.sleep(1)
+                    continue
+
             ret, frame = self.cap.read()
             if not ret:
-                print("Failed to read frame from camera")
-                break
+                failure_count += 1
+                print(f"Failed to read frame ({failure_count}/{max_failures})")
+                if failure_count >= max_failures:
+                    print("Too many frame failures, restarting camera...")
+                    self.cleanup()
+                    time.sleep(1)
+                    try:
+                        self.start_camera()
+                        failure_count = 0
+                    except Exception as e:
+                        print(f"Camera restart failed: {e}")
+                        time.sleep(2)
+                else:
+                    time.sleep(0.05)
+                continue
+
+            failure_count = 0
             
             # Skip frames for better performance (process every 2nd frame)
             frame_count += 1
@@ -285,6 +316,7 @@ class RealTimeObjectDetection:
     def start_detection(self):
         """Start the detection in a separate thread"""
         if not self.is_running:
+            self.stop_event.clear()
             detection_thread = threading.Thread(target=self.run_detection)
             detection_thread.daemon = True
             detection_thread.start()
@@ -292,6 +324,7 @@ class RealTimeObjectDetection:
     def stop_detection(self):
         """Stop the detection"""
         self.is_running = False
+        self.stop_event.set()
     
     def cleanup(self):
         """Clean up resources"""

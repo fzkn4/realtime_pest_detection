@@ -19,47 +19,51 @@ const int trigPin = 12;  // GPIO 12 (Trig)
 const int echoPin = 13;  // GPIO 13 (Echo)
 int maxDepth = 200;      // Container depth in mm
 
-// Global sensor data
-volatile long latestDistanceMM = 0;
-volatile float latestLevelPercent = 0;
-volatile int latestRoundedPercent = 0;
-unsigned long lastSensorUpdate = 0;
+// Global sensor data cache
+long lastDistanceMM = 0;
+unsigned long lastDistanceUpdate = 0;
+const unsigned long DISTANCE_UPDATE_INTERVAL = 200; // ms
 
 // Ultrasonic distance function
-long getDistanceMM(int samples = 5) {
+long getDistanceMM(int samples = 3) {
   long sum = 0;
+  int validSamples = 0;
+
   for (int i = 0; i < samples; i++) {
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
     digitalWrite(trigPin, HIGH);
     delayMicroseconds(10);
     digitalWrite(trigPin, LOW);
-    
-    long duration = pulseIn(echoPin, HIGH, 30000);
-    if (duration == 0) continue;
-    
-    float speedMPerS = 331.3 + (0.606 * 25.0);
+
+    long duration = pulseIn(echoPin, HIGH, 10000);  // 10 ms timeout
+    if (duration == 0) {
+      continue;  // ignore this sample
+    }
+
+    float speedMPerS = 331.3 + (0.606 * 25.0);      // 25°C assumed
     float speedMMPerUs = (speedMPerS * 1000.0) / 1e6;
     long distance = duration * speedMMPerUs / 2;
-    
+
     sum += distance;
-    delay(20);
+    validSamples++;
   }
-  return sum / samples;
+
+  if (validSamples == 0) {
+    return maxDepth;  // or some sentinel value
+  }
+
+  return sum / validSamples;
 }
 
 // HTTP handler for /sensor endpoint
 static esp_err_t sensor_handler(httpd_req_t *req) {
-  long distanceMM = getDistanceMM(8);
+  long distanceMM = lastDistanceMM;
   if (distanceMM > maxDepth) distanceMM = maxDepth;
   
   float levelPercent = 100.0 - ((float)distanceMM / maxDepth) * 100.0;
   levelPercent = constrain(levelPercent, 0, 100);
   int rounded10 = ((int)levelPercent / 10) * 10;
-  
-  latestDistanceMM = distanceMM;
-  latestLevelPercent = levelPercent;
-  latestRoundedPercent = rounded10;
   
   char json_response[256];
   snprintf(json_response, sizeof(json_response),
@@ -100,23 +104,18 @@ void setup() {
   cam_config.pin_pwdn = PWDN_GPIO_NUM;
   cam_config.pin_reset = RESET_GPIO_NUM;
   cam_config.xclk_freq_hz = 20000000;
-  cam_config.frame_size = FRAMESIZE_UXGA;
   cam_config.pixel_format = PIXFORMAT_JPEG;
-  cam_config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
-  cam_config.fb_location = CAMERA_FB_IN_PSRAM;
-  cam_config.jpeg_quality = 12;
-  cam_config.fb_count = 1;
+  cam_config.frame_size = FRAMESIZE_SVGA;  // or FRAMESIZE_VGA for even lighter load
 
   // PSRAM handling
-  if (cam_config.pixel_format == PIXFORMAT_JPEG) {
-    if (psramFound()) {
-      cam_config.jpeg_quality = 10;
+  if (psramFound()) {
+      cam_config.jpeg_quality = 12;         // slightly higher quality (still OK)
       cam_config.fb_count = 2;
       cam_config.grab_mode = CAMERA_GRAB_LATEST;
-    } else {
-      cam_config.frame_size = FRAMESIZE_SVGA;
+      cam_config.fb_location = CAMERA_FB_IN_PSRAM;
+  } else {
+      cam_config.frame_size = FRAMESIZE_QVGA;
       cam_config.fb_location = CAMERA_FB_IN_DRAM;
-    }
   }
 
   // Camera init
@@ -186,10 +185,11 @@ void setup() {
 }
 
 void loop() {
-  if (millis() - lastSensorUpdate > 300) {
-    Serial.printf("Distance: %ld mm | Level: %.1f%% | Rounded: %d%%\n",
-      latestDistanceMM, latestLevelPercent, latestRoundedPercent);
-    lastSensorUpdate = millis();
+  unsigned long now = millis();
+  if (now - lastDistanceUpdate >= DISTANCE_UPDATE_INTERVAL) {
+    lastDistanceMM = getDistanceMM(3);
+    lastDistanceUpdate = now;
   }
+
   delay(100);
 }
