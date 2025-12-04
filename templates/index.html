@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pest Detection System</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
     <style>
       * {
         margin: 0;
@@ -1520,7 +1520,7 @@
       toggleChartBtn.addEventListener("click", toggleChart);
 
       // -- SENSOR DATA UPDATE --
-      const sensorUrl = "/get_sensor_data"; 
+      const sensorUrl = "/sensor"; 
 
       function updateSensorData() {
         fetch(sensorUrl)
@@ -1561,6 +1561,21 @@
             levelText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
             description.textContent = statusMessage;
 
+            // Check for status changes and trigger notifications
+            if (previousTrapStatus !== status) {
+              if (status === "medium") {
+                showTrapNotification(
+                  "medium",
+                  "⚠️ Trap is getting full - monitor closely"
+                );
+              } else if (status === "full") {
+                showTrapNotification(
+                  "full",
+                  "🚨 Trap is full - needs immediate attention!"
+                );
+              }
+              previousTrapStatus = status;
+            }
           })
           .catch((error) => {
             console.error("Error fetching sensor data:", error);
@@ -2197,10 +2212,9 @@
         );
       }
 
-      // Initialize trap status on page load
-      updateTrapStatus();
-
       // Add detection status display
+      let previousTrapStatus = null; // Track previous trap status for notifications
+
       function updateDetectionStatus() {
         fetch("/get_detection_status")
           .then((response) => response.json())
@@ -2234,12 +2248,6 @@
 
       // Update detection status every second
       setInterval(updateDetectionStatus, 1000);
-
-      // Update trap status every 5 seconds
-      setInterval(updateTrapStatus, 5000);
-
-      // Track previous trap status for notifications
-      let previousTrapStatus = null;
 
       // Function to show push notification
       function showTrapNotification(status, message) {
@@ -2311,167 +2319,6 @@
             setTimeout(() => banner.remove(), 300);
           }
         }, autoCloseTime);
-      }
-
-      function updateTrapStatus() {
-        fetch("/get_trap_status")
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              const trapStatus = data.trap_status;
-              const trapCard = document.querySelector(".trap-status-card");
-              const trapLevelElement = document.getElementById("trapLevel");
-              const trapProgressFill =
-                document.getElementById("trapProgressFill");
-              const trapPercentage = document.getElementById("trapPercentage");
-              const trapDescription =
-                document.getElementById("trapDescription");
-
-              // Debug logging
-              console.log("Updating trap status to:", trapStatus.status);
-              console.log("Trap card element:", trapCard);
-
-              // Ensure all elements exist
-              if (
-                !trapCard ||
-                !trapLevelElement ||
-                !trapProgressFill ||
-                !trapPercentage ||
-                !trapDescription
-              ) {
-                console.error("One or more trap status elements not found");
-                return;
-              }
-
-              // Update card class for styling - remove any existing status classes first
-              trapCard.className = trapCard.className.replace(
-                /\s+(low|medium|full)/g,
-                ""
-              );
-              trapCard.className += ` ${trapStatus.status}`;
-
-              // Update progress bar
-              trapProgressFill.style.width = `${trapStatus.percentage}%`;
-
-              // Update percentage display
-              trapPercentage.textContent = `${trapStatus.percentage}%`;
-
-              // Update level text
-              trapLevelElement.textContent =
-                trapStatus.status.charAt(0).toUpperCase() +
-                trapStatus.status.slice(1);
-
-              // Update description based on status
-              let description = "";
-
-              switch (trapStatus.status) {
-                case "low":
-                  description = "Trap is functioning normally";
-                  break;
-                case "medium":
-                  description = "Trap is getting full - monitor closely";
-                  break;
-                case "full":
-                  description = "Trap is full - needs immediate attention!";
-                  break;
-              }
-
-              trapDescription.textContent = description;
-
-              // Check for status changes and trigger notifications
-              if (previousTrapStatus !== trapStatus.status) {
-                if (trapStatus.status === "medium") {
-                  showTrapNotification(
-                    "medium",
-                    "⚠️ Trap is getting full - monitor closely"
-                  );
-                } else if (trapStatus.status === "full") {
-                  showTrapNotification(
-                    "full",
-                    "🚨 Trap is full - needs immediate attention!"
-                  );
-                }
-                previousTrapStatus = trapStatus.status;
-              }
-
-              console.log(
-                "Trap status updated successfully to:",
-                trapStatus.status
-              );
-            }
-          })
-          .catch((error) =>
-            console.error("Error fetching trap status:", error)
-          );
-      }
-
-      function updateTrapStatusManually(level) {
-        // Add visual feedback
-        const button = event.target;
-        const originalText = button.textContent;
-
-        // Disable button temporarily
-        button.disabled = true;
-        button.textContent = "Updating...";
-
-        fetch(`/update_trap_status/${level}`)
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              console.log(`Trap status updated to: ${level}`);
-
-              // Show success feedback
-              button.textContent = "✓ Updated";
-              button.style.background =
-                "linear-gradient(135deg, #28a745, #20c997)";
-
-              // Immediately update the display
-              updateTrapStatus();
-
-              // Show immediate notification for manual updates
-              if (level === "medium") {
-                showTrapNotification(
-                  "medium",
-                  "⚠️ Trap status manually set to medium"
-                );
-              } else if (level === "full") {
-                showTrapNotification(
-                  "full",
-                  "🚨 Trap status manually set to full"
-                );
-              }
-
-              // Reset button after delay
-              setTimeout(() => {
-                button.disabled = false;
-                button.textContent = originalText;
-                button.style.background = "";
-              }, 1500);
-            } else {
-              console.error("Failed to update trap status:", data.message);
-              button.textContent = "✗ Error";
-              button.style.background =
-                "linear-gradient(135deg, #dc3545, #e83e8c)";
-
-              setTimeout(() => {
-                button.disabled = false;
-                button.textContent = originalText;
-                button.style.background = "";
-              }, 1500);
-            }
-          })
-          .catch((error) => {
-            console.error("Error updating trap status:", error);
-            button.textContent = "✗ Error";
-            button.style.background =
-              "linear-gradient(135deg, #dc3545, #e83e8c)";
-
-            setTimeout(() => {
-              button.disabled = false;
-              button.textContent = originalText;
-              button.style.background = "";
-            }, 1500);
-          });
       }
     </script>
   </body>

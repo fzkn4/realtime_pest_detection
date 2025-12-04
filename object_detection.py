@@ -410,7 +410,7 @@ def create_app():
             return {'status': 'success', 'detection_status': status}
         return {'status': 'error', 'message': 'No active detection session'}
 
-    @app.route('/get_sensor_data')
+    @app.route('/sensor')
     def get_sensor_data():
         """Fetch real-time sensor data from ESP32-CAM"""
         try:
