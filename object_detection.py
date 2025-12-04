@@ -9,6 +9,7 @@ from io import BytesIO
 from PIL import Image
 import json
 import os
+import shutil
 import requests
 from capture_thread import StreamCapture
 
@@ -282,6 +283,19 @@ detector = None
 def create_app():
     """Create Flask application"""
     app = Flask(__name__)
+    
+    # Ensure Chart.js is available in static directory
+    chart_js_source = os.path.join(os.path.dirname(__file__), 'node_modules', 'chart.js', 'dist', 'chart.umd.min.js')
+    chart_js_dest_dir = os.path.join(os.path.dirname(__file__), 'static', 'js')
+    chart_js_dest = os.path.join(chart_js_dest_dir, 'Chart.min.js')
+    
+    if os.path.exists(chart_js_source) and not os.path.exists(chart_js_dest):
+        os.makedirs(chart_js_dest_dir, exist_ok=True)
+        try:
+            shutil.copy2(chart_js_source, chart_js_dest)
+            print(f"✓ Chart.js copied to {chart_js_dest}")
+        except Exception as e:
+            print(f"⚠ Warning: Could not copy Chart.js: {e}")
     
     # Load object descriptions
     descriptions_path = os.path.join(os.path.dirname(__file__), 'object_descriptions.json')
