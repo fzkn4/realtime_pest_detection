@@ -20,6 +20,12 @@
         padding: 20px;
       }
 
+      @media (max-width: 480px) {
+        body {
+          padding: 10px;
+        }
+      }
+
       .container {
         max-width: 1400px;
         margin: 0 auto;
@@ -94,6 +100,10 @@
         margin-top: 20px;
         border: 1px solid #e0e0e0;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
       }
 
       .chart-header {
@@ -144,6 +154,9 @@
         grid-template-columns: 1fr 300px;
         gap: 30px;
         align-items: start;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
       }
 
       .chart-wrapper {
@@ -156,6 +169,24 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+
+      #pestChart {
+        max-width: 100% !important;
+        height: auto !important;
+        width: 100% !important;
+        box-sizing: border-box;
+        display: block;
+      }
+
+      /* Ensure chart wrapper contains the canvas properly */
+      .chart-wrapper canvas {
+        max-width: 100%;
+        height: auto;
       }
 
       .chart-legend {
@@ -165,6 +196,10 @@
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
         max-height: 400px;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .chart-legend::-webkit-scrollbar {
@@ -790,6 +825,7 @@
         overflow-y: auto;
         flex: 1;
         padding-right: 5px;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
       }
 
       .detections-scroll::-webkit-scrollbar {
@@ -1108,6 +1144,8 @@
         width: 100%;
         height: auto;
         display: block;
+        max-width: 100%;
+        object-fit: contain;
       }
 
       .camera-selection {
@@ -1185,11 +1223,29 @@
         cursor: pointer;
         transition: all 0.2s ease;
         font-family: "TT Interphases", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        min-height: 44px; /* Minimum touch target size */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .btn:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+      }
+
+      /* Improve touch targets on mobile */
+      @media (max-width: 768px) {
+        button,
+        .btn,
+        .chart-toggle-btn,
+        .clear-detections-btn,
+        .toggle-details-btn {
+          -webkit-tap-highlight-color: rgba(76, 175, 80, 0.2);
+          touch-action: manipulation;
+        }
       }
 
       .btn-start {
@@ -1279,6 +1335,7 @@
         font-size: 0.95rem;
       }
 
+      /* Tablet and smaller desktop (1024px - 1200px) */
       @media (max-width: 1200px) {
         .container {
           max-width: 95%;
@@ -1301,46 +1358,508 @@
         .chart-legend {
           max-height: 300px;
         }
+
+        .chart-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
       }
 
-      @media (max-width: 768px) {
+      /* Tablet (768px - 1024px) */
+      @media (max-width: 1024px) {
         .container {
-          margin: 10px;
+          max-width: 98%;
         }
 
         .header {
-          padding: 20px;
+          padding: 25px 20px;
         }
 
         .header h1 {
-          font-size: 2rem;
+          font-size: 2.2rem;
+        }
+
+        .header p {
+          font-size: 1rem;
         }
 
         .main-content {
+          padding: 25px;
+        }
+
+        .detection-layout {
+          gap: 20px;
+        }
+
+        .chart-section {
           padding: 20px;
+        }
+
+        .chart-header {
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .chart-title {
+          font-size: 1.2rem;
+        }
+
+        .panel-header h3 {
+          font-size: 1.2rem;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .detection-counts {
+          flex-wrap: wrap;
+        }
+      }
+
+      /* Mobile and small tablets (480px - 768px) */
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          border-radius: 8px;
+        }
+
+        .header {
+          padding: 20px 15px;
+        }
+
+        .header h1 {
+          font-size: 1.8rem;
+          margin-bottom: 8px;
+        }
+
+        .header p {
+          font-size: 0.95rem;
+        }
+
+        .main-content {
+          padding: 15px;
+        }
+
+        .status {
+          padding: 12px;
+          font-size: 14px;
+          margin-bottom: 20px;
         }
 
         .detection-layout {
           grid-template-columns: 1fr;
-          gap: 20px;
+          gap: 15px;
+          margin-top: 15px;
         }
 
         .description-panel {
           max-height: 400px;
+          padding: 15px;
         }
 
-        .camera-ip-input {
+        .panel-header {
+          padding-bottom: 12px;
+          margin-bottom: 12px;
+        }
+
+        .panel-header h3 {
+          font-size: 1.1rem;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .detection-counts {
           width: 100%;
-          max-width: 300px;
+          justify-content: flex-start;
+        }
+
+        .detection-count {
+          font-size: 0.85rem;
+          padding: 3px 10px;
+        }
+
+        .clear-detections-btn {
+          width: 100%;
+          padding: 10px;
+          font-size: 0.9rem;
+        }
+
+        .chart-section {
+          padding: 15px;
+          margin-top: 15px;
+          border-radius: 8px;
+        }
+
+        .chart-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          padding-bottom: 12px;
+        }
+
+        .chart-title {
+          font-size: 1.1rem;
+          width: 100%;
+        }
+
+        .chart-controls {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        .chart-toggle-btn {
+          width: 100%;
+          padding: 10px;
+        }
+
+        .chart-container {
+          grid-template-columns: 1fr;
+          gap: 15px;
+          width: 100%;
+          max-width: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
+        }
+
+        .chart-wrapper {
+          padding: 15px;
+          min-height: 300px;
+          width: 100%;
+          max-width: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
+        }
+
+        #pestChart {
+          max-width: 100% !important;
+          height: auto !important;
+          width: 100% !important;
+        }
+
+        .chart-legend {
+          max-height: 250px;
+          padding: 15px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow-x: hidden;
+        }
+
+        .chart-stats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+          margin-top: 15px;
+          padding-top: 15px;
+        }
+
+        .stat-card {
+          padding: 12px;
+        }
+
+        .stat-value {
+          font-size: 1.5rem;
+        }
+
+        .stat-label {
+          font-size: 0.75rem;
+        }
+
+        .video-container {
+          border-radius: 6px;
         }
 
         .controls {
           flex-direction: column;
-          align-items: center;
+          align-items: stretch;
+          gap: 10px;
+          margin-bottom: 20px;
         }
 
         .btn {
-          width: 200px;
+          width: 100%;
+          padding: 14px 20px;
+          font-size: 15px;
+          min-height: 48px; /* Touch-friendly minimum height */
+        }
+
+        .detection-item {
+          padding: 12px;
+          margin-bottom: 10px;
+          border-radius: 8px;
+        }
+
+        .detection-header {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .detection-name {
+          font-size: 1rem;
+        }
+
+        .detection-badges {
+          flex-shrink: 0;
+        }
+
+        .confidence-badge {
+          font-size: 0.75rem;
+          padding: 3px 8px;
+        }
+
+        .detection-meta {
+          gap: 6px;
+        }
+
+        .category-tag,
+        .time-tag {
+          font-size: 0.75rem;
+          padding: 3px 8px;
+        }
+
+        .detection-description {
+          font-size: 0.85rem;
+          line-height: 1.4;
+        }
+
+        .toggle-details-btn {
+          padding: 10px;
+          font-size: 0.9rem;
+          min-height: 44px; /* Touch-friendly */
+        }
+
+        .control-section {
+          padding: 8px;
+        }
+
+        .control-title {
+          font-size: 0.8rem;
+        }
+
+        .control-content {
+          font-size: 0.75rem;
+        }
+
+        .no-detections {
+          padding: 40px 15px;
+        }
+
+        .no-detections-icon {
+          font-size: 3rem;
+        }
+
+        .no-detections p {
+          font-size: 0.9rem;
+        }
+
+        .notification-banner {
+          top: 10px;
+          right: 10px;
+          left: 10px;
+          max-width: none;
+          padding: 10px 15px;
+          font-size: 0.85rem;
+        }
+      }
+
+      /* Improve text rendering on mobile */
+      @media (max-width: 768px) {
+        body {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-rendering: optimizeLegibility;
+        }
+      }
+
+      /* Small mobile (below 480px) */
+      @media (max-width: 480px) {
+        .container {
+          margin: 5px;
+          border-radius: 6px;
+        }
+
+        .header {
+          padding: 15px 10px;
+        }
+
+        .header h1 {
+          font-size: 1.5rem;
+          line-height: 1.2;
+        }
+
+        .header p {
+          font-size: 0.85rem;
+        }
+
+        .main-content {
+          padding: 12px;
+        }
+
+        .status {
+          padding: 10px;
+          font-size: 13px;
+          margin-bottom: 15px;
+        }
+
+        .detection-layout {
+          gap: 12px;
+          margin-top: 12px;
+        }
+
+        .description-panel {
+          padding: 12px;
+          max-height: 350px;
+        }
+
+        .panel-header {
+          padding-bottom: 10px;
+          margin-bottom: 10px;
+        }
+
+        .panel-header h3 {
+          font-size: 1rem;
+        }
+
+        .detection-count {
+          font-size: 0.8rem;
+          padding: 2px 8px;
+        }
+
+        .chart-section {
+          padding: 12px;
+          margin-top: 12px;
+        }
+
+        .chart-title {
+          font-size: 1rem;
+        }
+
+        .chart-container {
+          width: 100%;
+          max-width: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
+        }
+
+        .chart-wrapper {
+          padding: 12px;
+          min-height: 250px;
+          width: 100%;
+          max-width: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
+        }
+
+        #pestChart {
+          max-width: 100% !important;
+          height: auto !important;
+          width: 100% !important;
+        }
+
+        .chart-legend {
+          padding: 12px;
+          max-height: 200px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow-x: hidden;
+        }
+
+        .legend-item {
+          padding: 6px 0;
+          gap: 8px;
+        }
+
+        .legend-name {
+          font-size: 0.85rem;
+        }
+
+        .legend-details {
+          font-size: 0.75rem;
+        }
+
+        .chart-stats {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .stat-card {
+          padding: 10px;
+        }
+
+        .stat-value {
+          font-size: 1.3rem;
+        }
+
+        .stat-label {
+          font-size: 0.7rem;
+        }
+
+        .trap-status-card {
+          padding: 10px;
+        }
+
+        .trap-level {
+          font-size: 0.85rem;
+        }
+
+        .trap-description {
+          font-size: 0.7rem;
+        }
+
+        .trap-percentage {
+          font-size: 0.8rem;
+        }
+
+        .btn {
+          padding: 12px 16px;
+          font-size: 14px;
+        }
+
+        .detection-item {
+          padding: 10px;
+          margin-bottom: 8px;
+        }
+
+        .detection-name {
+          font-size: 0.95rem;
+        }
+
+        .detection-description {
+          font-size: 0.8rem;
+        }
+
+        .no-detections {
+          padding: 30px 10px;
+        }
+
+        .no-detections-icon {
+          font-size: 2.5rem;
+        }
+
+        .no-detections p {
+          font-size: 0.85rem;
+        }
+
+        .notification-banner {
+          top: 5px;
+          right: 5px;
+          left: 5px;
+          padding: 8px 12px;
+          font-size: 0.8rem;
+        }
+      }
+
+      /* Landscape mobile orientation */
+      @media (max-width: 768px) and (orientation: landscape) {
+        .description-panel {
+          max-height: 300px;
+        }
+
+        .chart-wrapper {
+          min-height: 250px;
+        }
+
+        .chart-legend {
+          max-height: 200px;
         }
       }
     </style>
@@ -1432,7 +1951,7 @@
 
           <div class="chart-container" id="chartContainer">
             <div class="chart-wrapper">
-              <canvas id="pestChart" width="400" height="400"></canvas>
+              <canvas id="pestChart"></canvas>
             </div>
 
             <div class="chart-legend" id="chartLegend">
@@ -2185,6 +2704,17 @@
 
       // Initialize chart on page load
       updateChart();
+
+      // Handle window resize to ensure chart stays responsive
+      let resizeTimeout;
+      window.addEventListener("resize", function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function () {
+          if (pestChart) {
+            pestChart.resize();
+          }
+        }, 250);
+      });
 
       // Request notification permission on page load
       if ("Notification" in window) {
