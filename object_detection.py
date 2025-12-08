@@ -19,8 +19,13 @@ VIDEO_STREAM_URL = f"http://{ESP32_CAM_IP}:81/stream"
 SENSOR_DATA_URL = f"http://{ESP32_CAM_IP}/sensor"
 
 
+# Construct an absolute path to the model file to ensure it's found regardless of the working directory.
+script_dir = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_MODEL_PATH = os.path.join(script_dir, 'datasets', 'yoloip1', 'best.pt')
+
+
 class RealTimeObjectDetection:
-    def __init__(self, model_path='datasets/yoloip1/best.pt', confidence_threshold=0.4):
+    def __init__(self, model_path=DEFAULT_MODEL_PATH, confidence_threshold=0.4):
         """
         Initialize the real-time pest detection system
         
