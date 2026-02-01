@@ -310,6 +310,28 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* Markdown-style formatting classes */
+        .description strong, .pest-description strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .pest-description h3, .pest-description h4 {
+            color: var(--primary);
+            margin: 15px 0 8px 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .pest-description ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .pest-description li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -415,6 +437,25 @@
             }
         }
 
+        function formatDescription(text) {
+            if (!text) return 'No detailed description available.';
+            
+            // Simple markdown-to-HTML parser for basic formatting
+            let html = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/### (.*?)\n/g, '<h4>$1</h4>') // H3/H4
+                .replace(/\n- (.*?)(?=\n|$)/g, '<li>$1</li>'); // Lists
+            
+            // Wrap list items in <ul> if needed
+            if (html.includes('<li>')) {
+                // This is a very basic list wrapper, might need refinement for multiple lists
+                html = html.replace(/(<li>.*?<\/li>)+/g, '<ul>$&</ul>');
+            }
+            
+            // Replace remaining newlines with breaks
+            return html.replace(/\n/g, '<br>');
+        }
+
         function createCard(item, index) {
             const card = document.createElement('div');
             card.className = 'detection-card';
@@ -422,6 +463,12 @@
             
             const timestamp = new Date(item.timestamp).toLocaleString();
             
+            // For card preview, strip markdown tags and just show plain text
+            const plainDescription = (item.description || 'No detailed description available.')
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/### (.*?)\n/g, '$1 ')
+                .replace(/\n- (.*?)/g, ' $1');
+
             card.innerHTML = `
                 <div class="card-image-box">
                     <img src="${item.image_path}" alt="${item.pest_name}">
@@ -435,7 +482,7 @@
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                         ${timestamp}
                     </div>
-                    <p class="description">${item.description || 'No detailed description available.'}</p>
+                    <p class="description">${plainDescription}</p>
                 </div>
                 <div class="card-footer">
                     <span class="view-details">Click for details</span>
@@ -460,7 +507,7 @@
             name.textContent = item.pest_name;
             time.textContent = new Date(item.timestamp).toLocaleString();
             conf.textContent = `${item.confidence}% Match Confidence`;
-            desc.textContent = item.description || 'No detailed description available for this detection.';
+            desc.innerHTML = formatDescription(item.description);
             id.textContent = `#DET-${item.id.toString().padStart(6, '0')}`;
 
             modal.style.display = 'flex';

@@ -122,6 +122,9 @@ class RealTimeObjectDetection:
                     'confidence': round(conf * 100, 1)
                 })
         
+        # Draw bounding boxes and pest labels
+        annotated_frame = results[0].plot()
+
         # Update detection tracking with duration-based counting
         with self.lock:
             # Check for new detections
@@ -142,7 +145,6 @@ class RealTimeObjectDetection:
                         self.active_detections[pest_type]['confidence'] = current_conf
             
             # Check for confirmed detections (3+ seconds)
-            confirmed_this_frame = []
             for pest_type, detection_info in list(self.active_detections.items()):
                 duration = current_time - detection_info['start_time']
                 if duration >= self.detection_duration_threshold and pest_type not in self.confirmed_detections:
@@ -160,10 +162,8 @@ class RealTimeObjectDetection:
                     }
                     self.pest_detection_history.append(detection_record)
                     
-                    # Save to database and save image
-                    self.save_detection_to_db(pest_type, detection_info['confidence'], frame)
-                    
-                    confirmed_this_frame.append(pest_type)
+                    # Save to database and save image (using annotated_frame)
+                    self.save_detection_to_db(pest_type, detection_info['confidence'], annotated_frame)
             
             # Remove detections that are no longer active (not seen in current frame)
             inactive_detections = []
@@ -181,9 +181,6 @@ class RealTimeObjectDetection:
         # Update current detections
         with self.lock:
             self.current_detections = detections
-        
-        # Draw bounding boxes and pest labels
-        annotated_frame = results[0].plot()
         
         return annotated_frame
     
@@ -297,13 +294,32 @@ class RealTimeObjectDetection:
             image_filename = f"{pest_name.replace(' ', '_')}_{timestamp_str}.jpg"
             image_path = os.path.join(self.detections_dir, image_filename)
             
-            # Save frame to disk
+            # Save frame to disk (this should be the annotated frame)
             cv2.imwrite(image_path, frame)
             
-            # Get description
+            # Construct a rich description
             description = ""
             if pest_name in self.object_descriptions:
-                description = self.object_descriptions[pest_name].get('description', '')
+                info = self.object_descriptions[pest_name]
+                main_desc = info.get('description', '')
+                category = info.get('category', 'Unknown')
+                
+                description = f"**Category:** {category}\n\n{main_desc}"
+                
+                # Add control methods if they exist
+                control = info.get('control_methods', {})
+                if control:
+                    description += "\n\n### Control Methods"
+                    if control.get('cultural'):
+                        description += f"\n- **Cultural:** {control['cultural']}"
+                    if control.get('biological'):
+                        description += f"\n- **Biological:** {control['biological']}"
+                    if control.get('chemical'):
+                        description += f"\n- **Chemical:** {control['chemical']}"
+                    if control.get('timing'):
+                        description += f"\n- **Timing:** {control['timing']}"
+            else:
+                description = f"{pest_name.title()} detected in the monitoring area."
             
             # Save to DB
             rel_image_path = f"detections/{image_filename}"
