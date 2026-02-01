@@ -3,7 +3,7 @@ import numpy as np
 from ultralytics import YOLO
 import threading
 import time
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 import base64
 from io import BytesIO
 from PIL import Image
@@ -12,6 +12,7 @@ import os
 import shutil
 import requests
 from capture_thread import StreamCapture
+from database_manager import DatabaseManager
 
 # Hardcoded ESP32-CAM IP and stream URL
 ESP32_CAM_IP = "192.168.4.11"
@@ -51,6 +52,16 @@ class RealTimeObjectDetection:
         self.detection_duration_threshold = 3.0  # Minimum 3 seconds to count
         self.active_detections = {}  # Track ongoing detections by pest type
         self.confirmed_detections = set()  # Track confirmed detections (3+ seconds)
+        
+        # Database and image storage
+        self.db = DatabaseManager()
+        self.detections_dir = os.path.join(script_dir, 'static', 'detections')
+        os.makedirs(self.detections_dir, exist_ok=True)
+        
+        # Load object descriptions for DB logging
+        descriptions_path = os.path.join(script_dir, 'object_descriptions.json')
+        with open(descriptions_path, 'r') as f:
+            self.object_descriptions = json.load(f)
         
     def start_camera(self):
         """Start the threaded camera capture from the hardcoded ESP32-CAM stream."""
@@ -148,6 +159,10 @@ class RealTimeObjectDetection:
                         'duration': duration
                     }
                     self.pest_detection_history.append(detection_record)
+                    
+                    # Save to database and save image
+                    self.save_detection_to_db(pest_type, detection_info['confidence'], frame)
+                    
                     confirmed_this_frame.append(pest_type)
             
             # Remove detections that are no longer active (not seen in current frame)
@@ -275,6 +290,29 @@ class RealTimeObjectDetection:
         self.is_running = False
         self.stop_event.set()
     
+    def save_detection_to_db(self, pest_name, confidence, frame):
+        """Save detection record and image proof to database and disk"""
+        try:
+            timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+            image_filename = f"{pest_name.replace(' ', '_')}_{timestamp_str}.jpg"
+            image_path = os.path.join(self.detections_dir, image_filename)
+            
+            # Save frame to disk
+            cv2.imwrite(image_path, frame)
+            
+            # Get description
+            description = ""
+            if pest_name in self.object_descriptions:
+                description = self.object_descriptions[pest_name].get('description', '')
+            
+            # Save to DB
+            rel_image_path = f"detections/{image_filename}"
+            self.db.save_detection(pest_name, confidence, rel_image_path, description)
+            print(f"✓ Saved detection to DB: {pest_name}")
+            
+        except Exception as e:
+            print(f"Error saving detection to disk/DB: {e}")
+
     def cleanup(self):
         """Clean up resources"""
         if self.stream_capture is not None:
@@ -311,6 +349,21 @@ def create_app():
     def index():
         """Main page"""
         return render_template('index.html')
+    
+    @app.route('/history')
+    def history():
+        """History page"""
+        return render_template('history.html')
+    
+    @app.route('/api/history')
+    def get_history():
+        """Get detection history from database"""
+        limit = request.args.get('limit', default=50, type=int)
+        offset = request.args.get('offset', default=0, type=int)
+        
+        db = DatabaseManager()
+        history_data = db.get_history(limit=limit, offset=offset)
+        return {'status': 'success', 'history': history_data}
     
     @app.route('/get_detections')
     def get_detections():
